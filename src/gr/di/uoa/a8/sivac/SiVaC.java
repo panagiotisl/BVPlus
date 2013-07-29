@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class SiVaC {
 
-	private static final int D = 2;
+	private static final int D = 4;
 
 	
 	private static void createNoDFile(String filename) throws IOException
@@ -47,7 +47,7 @@ public class SiVaC {
 	public static void main(String[] args) throws IOException {
 
 		System.out.println("SiVaC");
-		createNoDFile("cnr-2000/cnr-2000.txt");
+		createNoDFile("/var/www/graphs/amazon-2008/amazon-2008.txt");
 
 	}
 
