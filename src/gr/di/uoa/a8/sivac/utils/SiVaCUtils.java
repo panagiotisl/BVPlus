@@ -69,4 +69,12 @@ public class SiVaCUtils {
 		return (float) (social ? D*2*nodes.size() : (D*2+1)*nodes.size())/diagonal;
 	}
 	
+	
+	public static boolean isDiagonal(int a, int b, int D)
+	{
+		if(a>=b-D && a<=b+D)
+			return true;
+		return false;
+	}
+	
 }

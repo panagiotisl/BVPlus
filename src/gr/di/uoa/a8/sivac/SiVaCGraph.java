@@ -172,7 +172,7 @@ public class SiVaCGraph extends ImmutableGraph{
 	public boolean store(String basename)
 	{
 		//store diagonal part
-		// TODO check!
+		// TODO check! one more byte is needed (i think)
 		byte[] array = new byte[getSerialization(this.size, this.size)/8];
 		String line;
 		try
