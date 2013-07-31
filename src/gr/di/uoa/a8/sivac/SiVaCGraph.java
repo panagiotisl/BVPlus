@@ -16,7 +16,7 @@ import it.unimi.dsi.webgraph.ArcListASCIIGraph;
 import it.unimi.dsi.webgraph.BVGraph;
 import it.unimi.dsi.webgraph.ImmutableGraph;
 
-public class SiVaCGraph extends ImmutableGraph{
+public class SiVaCGraph extends ImmutableGraph {
 
 	private static final String SiVaC_EXTENSION = "a8";
 	private ImmutableGraph ig;
@@ -24,25 +24,32 @@ public class SiVaCGraph extends ImmutableGraph{
 	private int stripe_size;
 	private int size;
 	private File diagonal /* file descriptor for the diagonal file */;
-	private File tempD /* file descriptor  for a temp file with the arc list for the diagonal part */;
-	private File tempNoD /* file descriptor  for a temp file with the arc list for the non diagonal part */;
+	private File tempD /*
+						 * file descriptor for a temp file with the arc list for
+						 * the diagonal part
+						 */;
+	private File tempNoD /*
+						 * file descriptor for a temp file with the arc list for
+						 * the non diagonal part
+						 */;
 	private HashSet<Integer> nodes;
-	
+
 	public SiVaCGraph(InputStream is, int d) throws IOException {
 		this.D = d;
-		this.stripe_size = 2*D+1;
+		this.stripe_size = 2 * D + 1;
 		this.nodes = new HashSet<Integer>();
 		createTempFiles(is);
 		this.ig = ArcListASCIIGraph.loadOnce(new FileInputStream(tempNoD));
 		this.size = nodes.size();
 	}
 
-	/** Function that reads the arc list file and splits into two temp files, one for the diagonal and on for the non diagonal part
-	 *  and creates a list of nodes
+	/**
+	 * Function that reads the arc list file and splits into two temp files, one
+	 * for the diagonal and on for the non diagonal part and creates a list of
+	 * nodes
 	 * */
-	private boolean createTempFiles(InputStream is) throws IOException
-	{
-		
+	private boolean createTempFiles(InputStream is) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		tempD = File.createTempFile("SiVaC-D-", ".a8");
 		tempNoD = File.createTempFile("SiVaC-NoD-", ".a8");
@@ -53,19 +60,16 @@ public class SiVaCGraph extends ImmutableGraph{
 		String line;
 		while ((line = br.readLine()) != null) {
 			String[] temp = line.split("\\s+");
-			int a = Integer.parseInt(temp[0]);
-			int b = Integer.parseInt(temp[1]);
+			int a = Integer.parseInt(temp[0]) - 1;
+			int b = Integer.parseInt(temp[1]) - 1;
 			nodes.add(a);
 			nodes.add(b);
-			if(a>=b-D && a<=b+D)
-			{
+			if (a >= b - D && a <= b + D) {
 				// in the diagonal
-				bwD.write(line+'\n');
-			}
-			else
-			{
+				bwD.write(line + '\n');
+			} else {
 				// outside the diagonal
-				bwNoD.write(line+'\n');	
+				bwNoD.write(line + '\n');
 			}
 		}
 		br.close();
@@ -73,33 +77,28 @@ public class SiVaCGraph extends ImmutableGraph{
 		bwNoD.close();
 		return true;
 	}
-	
+
 	/** get position in file from node pair */
-	public int getSerialization(int a, int b)
-	{
+	public int getSerialization(int a, int b) {
 		// check if input is valid
-		if((a>b+D || a<b-D) || (a<0 || b<0) || a >= size || b >= size)
-			throw new IllegalArgumentException("not a valid node pair: ("+a+", "+b+")");
+		if ((a > b + D || a < b - D) || (a < 0 || b < 0) || a >= size || b >= size)
+			throw new IllegalArgumentException("not a valid node pair: (" + a + ", " + b + ")");
 		// calculate position
-		int no = a*this.stripe_size+b+D-a;
+		int no = a * this.stripe_size + b + D - a;
 		int temp = D;
 		// remove missing from beginning
-		for(int i=0;i<D;i++)
-		{
-			if(a>=i)
-			{
-				no-=temp;
+		for (int i = 0; i < D; i++) {
+			if (a >= i) {
+				no -= temp;
 				temp--;
 			}
 		}
-		//TODO correct?
+		// TODO correct?
 		temp = 1;
 		// remove missing from end
-		for(int i=this.size+1-this.D;i<this.size;i++)
-		{
-			if(a>=i)
-			{
-				no-=temp;
+		for (int i = this.size + 1 - this.D; i < this.size; i++) {
+			if (a >= i) {
+				no -= temp;
 				temp++;
 			}
 		}
@@ -107,36 +106,31 @@ public class SiVaCGraph extends ImmutableGraph{
 	}
 
 	// tests if bit is set in a byte
-	private static boolean isSet(byte my_byte, int pos)
-	{
-		if(pos>7 || pos <0)
-			throw new IllegalArgumentException("not a valid bit position: "+pos);
-	   return (my_byte & (1 << pos))!=0;
-	} 
+	private static boolean isSet(byte my_byte, int pos) {
+		if (pos > 7 || pos < 0)
+			throw new IllegalArgumentException("not a valid bit position: " + pos);
+		return (my_byte & (1 << pos)) != 0;
+	}
 
 	// set a bit in a byte
-	private static byte set_bit(byte my_byte, int pos)
-	{
-		if(pos>7 || pos <0)
-			throw new IllegalArgumentException("not a valid bit position: "+pos);
+	private static byte set_bit(byte my_byte, int pos) {
+		if (pos > 7 || pos < 0)
+			throw new IllegalArgumentException("not a valid bit position: " + pos);
 		return (byte) (my_byte | (1 << pos));
 	}
-	
+
 	// unset a bit in a byte
-	private static byte unset_bit(byte my_byte, int pos)
-	{
-		if(pos>7 || pos <0)
-			throw new IllegalArgumentException("not a valid bit position: "+pos);
+	private static byte unset_bit(byte my_byte, int pos) {
+		if (pos > 7 || pos < 0)
+			throw new IllegalArgumentException("not a valid bit position: " + pos);
 		return (byte) (my_byte & ~(1 << pos));
 	}
-	
-	public static SiVaCGraph loadOnce(InputStream is)
-	{
+
+	public static SiVaCGraph loadOnce(InputStream is) {
 		return loadOnce(is, 1);
 	}
 
-	public static SiVaCGraph loadOnce(InputStream is, int d)
-	{
+	public static SiVaCGraph loadOnce(InputStream is, int d) {
 		SiVaCGraph sg;
 		try {
 			sg = new SiVaCGraph(is, d);
@@ -168,38 +162,35 @@ public class SiVaCGraph extends ImmutableGraph{
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	public boolean store(String basename)
-	{
-		//store diagonal part
+
+	public boolean store(String basename) {
+		// store diagonal part
 		// TODO check! one more byte is needed (i think)
-		byte[] array = new byte[getSerialization(this.size, this.size)/8];
+		int largest = getSerialization(this.size - 1, this.size - 1);
+		byte[] array = new byte[largest / 8 + (largest % 8 != 0 ? 1 : 0)];
 		String line;
-		try
-		{
+		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(tempD)));
 			while ((line = br.readLine()) != null) {
 				String[] temp = line.split("\\s+");
-				int a = Integer.parseInt(temp[0]);
-				int b = Integer.parseInt(temp[1]);
+				int a = Integer.parseInt(temp[0]) - 1;
+				int b = Integer.parseInt(temp[1]) - 1;
 				int no = getSerialization(a, b);
-				set_bit(array[no/8], no%8);
+				set_bit(array[no / 8], no % 8);
 			}
 			br.close();
-		}
-		catch(IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		FileOutputStream fos;
 		try {
-			fos = new FileOutputStream(basename+"."+SiVaC_EXTENSION);
+			fos = new FileOutputStream(basename + "." + SiVaC_EXTENSION);
 			fos.write(array);
 			fos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		// store non diagonal part as BVGraph
 		try {
 			ImmutableGraph.store(BVGraph.class, this.ig, basename);
@@ -209,9 +200,11 @@ public class SiVaCGraph extends ImmutableGraph{
 		}
 		return true;
 	}
-	
+
 	public static void main(String[] args) throws FileNotFoundException {
-		SiVaCGraph a = SiVaCGraph.loadOnce(new FileInputStream(new File("/var/www/graphs/cnr-2000/cnr-2000.txt")),1);
+		SiVaCGraph a = SiVaCGraph.loadOnce(new FileInputStream(new File("/var/www/graphs/cnr-2000/cnr-2000.txt")), 1);
+		a.store("test");
+		System.out.println("Stored");
 	}
-	
+
 }
