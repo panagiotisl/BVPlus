@@ -10,8 +10,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.HashSet;
 
+import javax.management.RuntimeErrorException;
+
+import com.google.common.io.Files;
+
+import gr.di.uoa.a8.sivac.utils.SiVaCUtils;
 import it.unimi.dsi.webgraph.ArcListASCIIGraph;
 import it.unimi.dsi.webgraph.BVGraph;
 import it.unimi.dsi.webgraph.ImmutableGraph;
@@ -23,7 +29,7 @@ public class SiVaCGraph extends ImmutableGraph {
 	private int D;
 	private int stripe_size;
 	private int size;
-	private File diagonal /* file descriptor for the diagonal file */;
+	private byte[] diagonal /* file descriptor for the diagonal file */;
 	private File tempD /*
 						 * file descriptor for a temp file with the arc list for
 						 * the diagonal part
@@ -41,6 +47,10 @@ public class SiVaCGraph extends ImmutableGraph {
 		createTempFiles(is);
 		this.ig = ArcListASCIIGraph.loadOnce(new FileInputStream(tempNoD));
 		this.size = nodes.size();
+		System.out.println(this.size);
+		this.store("temp");
+		this.diagonal = loadDiagonal(new File("temp." + SiVaC_EXTENSION));
+		this.ig = BVGraph.load("temp");
 	}
 
 	/**
@@ -165,7 +175,7 @@ public class SiVaCGraph extends ImmutableGraph {
 
 	public boolean store(String basename) {
 		// store diagonal part
-		// TODO check! one more byte is needed (i think)
+		// TODO check!
 		int largest = getSerialization(this.size - 1, this.size - 1);
 		byte[] array = new byte[largest / 8 + (largest % 8 != 0 ? 1 : 0)];
 		String line;
@@ -176,7 +186,7 @@ public class SiVaCGraph extends ImmutableGraph {
 				int a = Integer.parseInt(temp[0]) - 1;
 				int b = Integer.parseInt(temp[1]) - 1;
 				int no = getSerialization(a, b);
-				set_bit(array[no / 8], no % 8);
+				array[no / 8] = set_bit(array[no / 8], no % 8);
 			}
 			br.close();
 		} catch (IOException e) {
@@ -201,10 +211,48 @@ public class SiVaCGraph extends ImmutableGraph {
 		return true;
 	}
 
-	public static void main(String[] args) throws FileNotFoundException {
+	public byte[] loadDiagonal(File file) throws IOException {
+		return Files.toByteArray(file);
+	}
+
+	public boolean existsEdge(int a, int b) {
+		if (SiVaCUtils.isDiagonal(a, b, D)) {
+			int no = getSerialization(a, b);
+			return (isSet(this.diagonal[no / 8], no % 8));
+		}
+		else
+		{
+			int[] temp = this.ig.successorArray(a+1);
+			for(int suc : temp)
+			{
+				if(suc - 1 == b)
+					return true;
+			}
+		}
+		return false;
+			
+
+	}
+
+
+	private void checkAllEdges(FileInputStream fileInputStream) throws NumberFormatException, IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(fileInputStream));
+		String line;
+		while ((line = br.readLine()) != null) {
+			String[] temp = line.split("\\s+");
+			int a = Integer.parseInt(temp[0]) - 1;
+			int b = Integer.parseInt(temp[1]) - 1;
+			if(!this.existsEdge(a, b))
+				throw new RuntimeException("Edge not found "+ a + " " + b);
+		}
+		br.close();
+	}
+
+	
+	public static void main(String[] args) throws NumberFormatException, IOException {
 		SiVaCGraph a = SiVaCGraph.loadOnce(new FileInputStream(new File("/var/www/graphs/cnr-2000/cnr-2000.txt")), 1);
-		a.store("test");
-		System.out.println("Stored");
+		a.checkAllEdges(new FileInputStream(new File("/var/www/graphs/cnr-2000/cnr-2000.txt")));
+		// a.store("test");
 	}
 
 }
