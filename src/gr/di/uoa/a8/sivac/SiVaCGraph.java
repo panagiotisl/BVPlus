@@ -4,16 +4,12 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.HashSet;
-
-import javax.management.RuntimeErrorException;
 
 import com.google.common.io.Files;
 
@@ -21,14 +17,16 @@ import gr.di.uoa.a8.sivac.utils.SiVaCUtils;
 import it.unimi.dsi.webgraph.ArcListASCIIGraph;
 import it.unimi.dsi.webgraph.BVGraph;
 import it.unimi.dsi.webgraph.ImmutableGraph;
+import it.unimi.dsi.webgraph.LazyIntIterator;
 
 public class SiVaCGraph extends ImmutableGraph {
 
 	private static final String SiVaC_EXTENSION = "a8";
 	private ImmutableGraph ig;
 	private int D;
-	private int stripe_size;
+//	private int stripe_size;
 	private int size;
+	private int edges;
 	private byte[] diagonal /* file descriptor for the diagonal file */;
 	private File tempD /*
 						 * file descriptor for a temp file with the arc list for
@@ -42,12 +40,11 @@ public class SiVaCGraph extends ImmutableGraph {
 
 	public SiVaCGraph(InputStream is, int d) throws IOException {
 		this.D = d;
-		this.stripe_size = 2 * D + 1;
+//		this.stripe_size = 2 * D + 1;
 		this.nodes = new HashSet<Integer>();
 		createTempFiles(is);
 		this.ig = ArcListASCIIGraph.loadOnce(new FileInputStream(tempNoD));
 		this.size = nodes.size();
-		System.out.println(this.size);
 		this.store("temp");
 		this.diagonal = loadDiagonal(new File("temp." + SiVaC_EXTENSION));
 		this.ig = BVGraph.load("temp");
@@ -72,8 +69,9 @@ public class SiVaCGraph extends ImmutableGraph {
 			String[] temp = line.split("\\s+");
 			int a = Integer.parseInt(temp[0]) - 1;
 			int b = Integer.parseInt(temp[1]) - 1;
-			nodes.add(a);
-			nodes.add(b);
+			this.nodes.add(a);
+			this.nodes.add(b);
+			this.edges++;
 			if (a >= b - D && a <= b + D) {
 				// in the diagonal
 				bwD.write(line + '\n');
@@ -89,12 +87,13 @@ public class SiVaCGraph extends ImmutableGraph {
 	}
 
 	/** get position in file from node pair */
-	public int getSerialization(int a, int b) {
+	public static int getSerialization(int a, int b, int size, int D) {
 		// check if input is valid
 		if ((a > b + D || a < b - D) || (a < 0 || b < 0) || a >= size || b >= size)
 			throw new IllegalArgumentException("not a valid node pair: (" + a + ", " + b + ")");
 		// calculate position
-		int no = a * this.stripe_size + b + D - a;
+		// TODO what about social?
+		int no = a * (2*D+1) + b + D - a;
 		int temp = D;
 		// remove missing from beginning
 		for (int i = 0; i < D; i++) {
@@ -106,7 +105,7 @@ public class SiVaCGraph extends ImmutableGraph {
 		// TODO correct?
 		temp = 1;
 		// remove missing from end
-		for (int i = this.size + 1 - this.D; i < this.size; i++) {
+		for (int i = size + 1 - D; i < size; i++) {
 			if (a >= i) {
 				no -= temp;
 				temp++;
@@ -116,21 +115,21 @@ public class SiVaCGraph extends ImmutableGraph {
 	}
 
 	// tests if bit is set in a byte
-	private static boolean isSet(byte my_byte, int pos) {
+	public static boolean isSet(byte my_byte, int pos) {
 		if (pos > 7 || pos < 0)
 			throw new IllegalArgumentException("not a valid bit position: " + pos);
 		return (my_byte & (1 << pos)) != 0;
 	}
 
 	// set a bit in a byte
-	private static byte set_bit(byte my_byte, int pos) {
+	public static byte set_bit(byte my_byte, int pos) {
 		if (pos > 7 || pos < 0)
 			throw new IllegalArgumentException("not a valid bit position: " + pos);
 		return (byte) (my_byte | (1 << pos));
 	}
 
 	// unset a bit in a byte
-	private static byte unset_bit(byte my_byte, int pos) {
+	public static byte unset_bit(byte my_byte, int pos) {
 		if (pos > 7 || pos < 0)
 			throw new IllegalArgumentException("not a valid bit position: " + pos);
 		return (byte) (my_byte & ~(1 << pos));
@@ -161,6 +160,10 @@ public class SiVaCGraph extends ImmutableGraph {
 	public int numNodes() {
 		return this.size;
 	}
+	
+	public int numEdges(){
+		return this.edges;
+	}
 
 	@Override
 	public int outdegree(int arg0) {
@@ -176,7 +179,7 @@ public class SiVaCGraph extends ImmutableGraph {
 	public boolean store(String basename) {
 		// store diagonal part
 		// TODO check!
-		int largest = getSerialization(this.size - 1, this.size - 1);
+		int largest = getSerialization(this.size - 1, this.size - 1, size, D);
 		byte[] array = new byte[largest / 8 + (largest % 8 != 0 ? 1 : 0)];
 		String line;
 		try {
@@ -185,7 +188,7 @@ public class SiVaCGraph extends ImmutableGraph {
 				String[] temp = line.split("\\s+");
 				int a = Integer.parseInt(temp[0]) - 1;
 				int b = Integer.parseInt(temp[1]) - 1;
-				int no = getSerialization(a, b);
+				int no = getSerialization(a, b, size, D);
 				array[no / 8] = set_bit(array[no / 8], no % 8);
 			}
 			br.close();
@@ -215,9 +218,9 @@ public class SiVaCGraph extends ImmutableGraph {
 		return Files.toByteArray(file);
 	}
 
-	public boolean existsEdge(int a, int b) {
+	public boolean isSuccessor(int a, int b) {
 		if (SiVaCUtils.isDiagonal(a, b, D)) {
-			int no = getSerialization(a, b);
+			int no = getSerialization(a, b, size, D);
 			return (isSet(this.diagonal[no / 8], no % 8));
 		}
 		else
@@ -230,10 +233,13 @@ public class SiVaCGraph extends ImmutableGraph {
 			}
 		}
 		return false;
-			
-
 	}
 
+	public LazyIntIterator getSuccessors(int a)
+	{
+		return this.ig.successors(a);
+	}
+	
 
 	private void checkAllEdges(FileInputStream fileInputStream) throws NumberFormatException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(fileInputStream));
@@ -242,7 +248,7 @@ public class SiVaCGraph extends ImmutableGraph {
 			String[] temp = line.split("\\s+");
 			int a = Integer.parseInt(temp[0]) - 1;
 			int b = Integer.parseInt(temp[1]) - 1;
-			if(!this.existsEdge(a, b))
+			if(!this.isSuccessor(a, b))
 				throw new RuntimeException("Edge not found "+ a + " " + b);
 		}
 		br.close();
@@ -252,6 +258,7 @@ public class SiVaCGraph extends ImmutableGraph {
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		SiVaCGraph a = SiVaCGraph.loadOnce(new FileInputStream(new File("/var/www/graphs/cnr-2000/cnr-2000.txt")), 1);
 		a.checkAllEdges(new FileInputStream(new File("/var/www/graphs/cnr-2000/cnr-2000.txt")));
+		a.getSuccessors(5);
 		// a.store("test");
 	}
 
