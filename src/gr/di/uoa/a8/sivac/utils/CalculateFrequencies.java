@@ -8,18 +8,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class CalculateFrequencies {
 
-	private static Map<Double, Integer> freqs = new HashMap<Double, Integer>();
+	private static Map<Double, Integer> freqs;
 
 	private static void calculateFrequencies(File file, int D) throws NumberFormatException, IOException {
 
-		List<Integer> nodes = new ArrayList<Integer>();
+		Set<Integer> nodes = new HashSet<Integer>();
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 		String line;
 		while ((line = br.readLine()) != null) {
@@ -46,7 +46,7 @@ public class CalculateFrequencies {
 
 		}
 		br.close();
-
+		freqs = new HashMap<Double, Integer>();
 		for (int i = 0; i < size; i++)
 		{
 			double number = 0;
