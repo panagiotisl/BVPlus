@@ -2,43 +2,43 @@
 To bits/edge είναι η συμπίεση του κομματιού της διαγωνίου αν αποθηκεύσουμε όλα τα στοιχεία της με το δικό μας τρόπο.
 
 /var/www/graphs/in-2004/in-2004.txt
-1: In Diagonal: 1269900 Total: 16917053 Percentage: 0.07506627   bits/edge: 3.2668793
-2: In Diagonal: 1801261 Total: 16917053 Percentage: 0.10647606   bits/edge: 3.8386164
-3: In Diagonal: 2214200 Total: 16917053 Percentage: 0.13088569   bits/edge: 4.371823
-4: In Diagonal: 2558586 Total: 16917053 Percentage: 0.15124302   bits/edge: 4.8643394
+1: In Diagonal: 1269900 Total: 16917053 Percentage: 7.506627   bits/edge: 3.2668793
+2: In Diagonal: 1801261 Total: 16917053 Percentage: 10.647606   bits/edge: 3.8386164
+3: In Diagonal: 2214200 Total: 16917053 Percentage: 13.088569   bits/edge: 4.371823
+4: In Diagonal: 2558586 Total: 16917053 Percentage: 15.124302   bits/edge: 4.8643394
 
 /var/www/graphs/amazon-2008/amazon-2008.txt - SOCIAL
-1: In Diagonal: 726777 Total: 5158388 Percentage: 0.14089227     bits/edge: 2.0235176
-2: In Diagonal: 1243015 Total: 5158388 Percentage: 0.24096966    bits/edge: 2.3662562
-3: In Diagonal: 1651443 Total: 5158388 Percentage: 0.3201471     bits/edge: 2.6715653
-4: In Diagonal: 1980633 Total: 5158388 Percentage: 0.38396356    bits/edge: 2.9700525
+1: In Diagonal: 726777 Total: 5158388 Percentage: 14.089227     bits/edge: 2.0235176
+2: In Diagonal: 1243015 Total: 5158388 Percentage: 24.096966    bits/edge: 2.3662562
+3: In Diagonal: 1651443 Total: 5158388 Percentage: 32.01471     bits/edge: 2.6715653
+4: In Diagonal: 1980633 Total: 5158388 Percentage: 38.396356    bits/edge: 2.9700525
 
 /var/www/graphs/hollywood-2009/hollywood-2009.txt - SOCIAL
-1: In Diagonal: 1973712 Total: 57515616 Percentage: 0.034316108  bits/edge: 1.1550875
-2: In Diagonal: 2653817 Total: 57515616 Percentage: 0.04614081   bits/edge: 1.7181365
-3: In Diagonal: 3235975 Total: 57515616 Percentage: 0.056262545  bits/edge: 2.113561
-4: In Diagonal: 3746482 Total: 57515616 Percentage: 0.06513852   bits/edge: 2.4340808
+1: In Diagonal: 1973712 Total: 57515616 Percentage: 3.4316108  bits/edge: 1.1550875
+2: In Diagonal: 2653817 Total: 57515616 Percentage: 4.614081   bits/edge: 1.7181365
+3: In Diagonal: 3235975 Total: 57515616 Percentage: 5.6262545  bits/edge: 2.113561
+4: In Diagonal: 3746482 Total: 57515616 Percentage: 6.513852   bits/edge: 2.4340808
 
 /var/www/graphs/cnr-2000/cnr-2000.txt
-1: In Diagonal: 252040 Total: 3216152 Percentage: 0.07836694     bits/edge: 3.8750634
-2: In Diagonal: 351664 Total: 3216152 Percentage: 0.10934309     bits/edge: 4.6288075
-3: In Diagonal: 430397 Total: 3216152 Percentage: 0.13382359     bits/edge: 5.2948766
-4: In Diagonal: 498555 Total: 3216152 Percentage: 0.15501599     bits/edge: 5.8770103
+1: In Diagonal: 252040 Total: 3216152 Percentage: 7.836694     bits/edge: 3.8750634
+2: In Diagonal: 351664 Total: 3216152 Percentage: 10.934309     bits/edge: 4.6288075
+3: In Diagonal: 430397 Total: 3216152 Percentage: 13.382359     bits/edge: 5.2948766
+4: In Diagonal: 498555 Total: 3216152 Percentage: 15.501599     bits/edge: 5.8770103
 
 /var/www/graphs/eu2005/eu2005.txt
-1: In Diagonal: 1132599 Total: 19235140 Percentage: 0.058881767  bits/edge: 2.285003
-2: In Diagonal: 1617185 Total: 19235140 Percentage: 0.08407451   bits/edge: 2.667178
-3: In Diagonal: 2022183 Total: 19235140 Percentage: 0.10512962   bits/edge: 2.9862025
-4: In Diagonal: 2381855 Total: 19235140 Percentage: 0.123828314  bits/edge: 3.2596343
+1: In Diagonal: 1132599 Total: 19235140 Percentage: 5.8881767  bits/edge: 2.285003
+2: In Diagonal: 1617185 Total: 19235140 Percentage: 8.407451   bits/edge: 2.667178
+3: In Diagonal: 2022183 Total: 19235140 Percentage: 10.512962   bits/edge: 2.9862025
+4: In Diagonal: 2381855 Total: 19235140 Percentage: 12.3828314  bits/edge: 3.2596343
 
 /var/www/graphs/dblp2010/dblp2010.txt - SOCIAL
-1: In Diagonal: 188704 Total: 807700 Percentage: 0.2336313       bits/edge: 3.1864402
-2: In Diagonal: 299796 Total: 807700 Percentage: 0.37117246      bits/edge: 4.0113544
-3: In Diagonal: 369926 Total: 807700 Percentage: 0.45799926      bits/edge: 4.876332
-4: In Diagonal: 417151 Total: 807700 Percentage: 0.51646775      bits/edge: 6.4864354
+1: In Diagonal: 188704 Total: 807700 Percentage: 23.36313       bits/edge: 3.1864402
+2: In Diagonal: 299796 Total: 807700 Percentage: 37.117246      bits/edge: 4.0113544
+3: In Diagonal: 369926 Total: 807700 Percentage: 45.799926      bits/edge: 4.876332
+4: In Diagonal: 417151 Total: 807700 Percentage: 51.646775      bits/edge: 6.4864354
 
 /var/www/graphs/ljournal-2008/ljournal-2008.txt - SOCIAL
-1: In Diagonal: 4438341 Total: 79023142 Percentage: 0.056165077  bits/edge: 2.4167593
-2: In Diagonal: 6561132 Total: 79023142 Percentage: 0.08302798   bits/edge: 3.2696803
-3: In Diagonal: 8146292 Total: 79023142 Percentage: 0.10308742   bits/edge: 3.950166
-4: In Diagonal: 9435811 Total: 79023142 Percentage: 0.119405665  bits/edge: 4.5471034
+1: In Diagonal: 4438341 Total: 79023142 Percentage: 5.6165077  bits/edge: 2.4167593
+2: In Diagonal: 6561132 Total: 79023142 Percentage: 8.302798   bits/edge: 3.2696803
+3: In Diagonal: 8146292 Total: 79023142 Percentage: 10.308742   bits/edge: 3.950166
+4: In Diagonal: 9435811 Total: 79023142 Percentage: 11.9405665  bits/edge: 4.5471034
