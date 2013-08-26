@@ -42,6 +42,12 @@ To bits/edge είναι η συμπίεση του κομματιού της δ�
 2: In Diagonal: 299796 Total: 807700 Percentage: 37.117246      bits/edge: 4.0113544
 3: In Diagonal: 369926 Total: 807700 Percentage: 45.799926      bits/edge: 4.876332
 4: In Diagonal: 417151 Total: 807700 Percentage: 51.646775      bits/edge: 6.4864354
+5: In Diagonal: 450481 Total: 807700 Percentage: 55.773306
+6: In Diagonal: 475166 Total: 807700 Percentage: 58.829516
+7: In Diagonal: 494057 Total: 807700 Percentage: 61.16838
+8: In Diagonal: 509065 Total: 807700 Percentage: 63.026494
+9: In Diagonal: 521132 Total: 807700 Percentage: 64.52049
+10: In Diagonal: 531127 Total: 807700 Percentage: 65.757954
 
 /var/www/graphs/ljournal-2008/ljournal-2008.txt - SOCIAL
 1: In Diagonal: 4438341 Total: 79023142 Percentage: 5.6165077  bits/edge: 2.4167593
