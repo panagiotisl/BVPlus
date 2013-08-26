@@ -12,6 +12,12 @@ To bits/edge είναι η συμπίεση του κομματιού της δ�
 2: In Diagonal: 1243015 Total: 5158388 Percentage: 24.096966    bits/edge: 2.3662562
 3: In Diagonal: 1651443 Total: 5158388 Percentage: 32.01471     bits/edge: 2.6715653
 4: In Diagonal: 1980633 Total: 5158388 Percentage: 38.396356    bits/edge: 2.9700525
+5: In Diagonal: 2247105 Total: 5158388 Percentage: 43.562156
+6: In Diagonal: 2463122 Total: 5158388 Percentage: 47.749838
+7: In Diagonal: 2637595 Total: 5158388 Percentage: 51.132154
+8: In Diagonal: 2779337 Total: 5158388 Percentage: 53.87995
+9: In Diagonal: 2894323 Total: 5158388 Percentage: 56.10906
+10:  In Diagonal: 2988384 Total: 5158388 Percentage: 57.932514
 
 /var/www/graphs/hollywood-2009/hollywood-2009.txt - SOCIAL
 1: In Diagonal: 1973712 Total: 57515616 Percentage: 3.4316108  bits/edge: 1.1550875
