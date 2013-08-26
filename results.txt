@@ -6,6 +6,13 @@ To bits/edge είναι η συμπίεση του κομματιού της δ�
 2: In Diagonal: 1801261 Total: 16917053 Percentage: 10.647606   bits/edge: 3.8386164
 3: In Diagonal: 2214200 Total: 16917053 Percentage: 13.088569   bits/edge: 4.371823
 4: In Diagonal: 2558586 Total: 16917053 Percentage: 15.124302   bits/edge: 4.8643394
+5: In Diagonal: 2851601 Total: 16917053 Percentage: 16.85637
+6: In Diagonal: 3108128 Total: 16917053 Percentage: 18.372751
+7: In Diagonal: 3337269 Total: 16917053 Percentage: 19.72725
+8: In Diagonal: 3544897 Total: 16917053 Percentage: 20.954578
+9: In Diagonal: 3734115 Total: 16917053 Percentage: 22.073082
+10: In Diagonal: 3907986 Total: 16917053 Percentage: 23.100868
+
 
 /var/www/graphs/amazon-2008/amazon-2008.txt - SOCIAL
 1: In Diagonal: 726777 Total: 5158388 Percentage: 14.089227     bits/edge: 2.0235176
@@ -24,18 +31,37 @@ To bits/edge είναι η συμπίεση του κομματιού της δ�
 2: In Diagonal: 2653817 Total: 57515616 Percentage: 4.614081   bits/edge: 1.7181365
 3: In Diagonal: 3235975 Total: 57515616 Percentage: 5.6262545  bits/edge: 2.113561
 4: In Diagonal: 3746482 Total: 57515616 Percentage: 6.513852   bits/edge: 2.4340808
+5: In Diagonal: 4201230 Total: 57515616 Percentage: 7.3045034
+6: In Diagonal: 4611582 Total: 57515616 Percentage: 8.017965
+7: In Diagonal: 4984610 Total: 57515616 Percentage: 8.666533
+8: In Diagonal: 5326205 Total: 57515616 Percentage: 9.26045
+9: In Diagonal: 5640735 Total: 57515616 Percentage: 9.80731
+10: In Diagonal: 5932139 Total: 57515616 Percentage: 10.313962
+
 
 /var/www/graphs/cnr-2000/cnr-2000.txt
 1: In Diagonal: 252040 Total: 3216152 Percentage: 7.836694     bits/edge: 3.8750634
 2: In Diagonal: 351664 Total: 3216152 Percentage: 10.934309     bits/edge: 4.6288075
 3: In Diagonal: 430397 Total: 3216152 Percentage: 13.382359     bits/edge: 5.2948766
 4: In Diagonal: 498555 Total: 3216152 Percentage: 15.501599     bits/edge: 5.8770103
+5: In Diagonal: 558224 Total: 3216152 Percentage: 17.356892
+6: In Diagonal: 612246 Total: 3216152 Percentage: 19.0366
+7: In Diagonal: 661544 Total: 3216152 Percentage: 20.569426
+8: In Diagonal: 706821 Total: 3216152 Percentage: 21.977224
+9: In Diagonal: 748918 Total: 3216152 Percentage: 23.28615
+10: In Diagonal: 788384 Total: 3216152 Percentage: 24.51327
 
 /var/www/graphs/eu2005/eu2005.txt
 1: In Diagonal: 1132599 Total: 19235140 Percentage: 5.8881767  bits/edge: 2.285003
 2: In Diagonal: 1617185 Total: 19235140 Percentage: 8.407451   bits/edge: 2.667178
 3: In Diagonal: 2022183 Total: 19235140 Percentage: 10.512962   bits/edge: 2.9862025
 4: In Diagonal: 2381855 Total: 19235140 Percentage: 12.3828314  bits/edge: 3.2596343
+5: In Diagonal: 2703234 Total: 19235140 Percentage: 14.053622
+6: In Diagonal: 2994260 Total: 19235140 Percentage: 15.566613
+7: In Diagonal: 3257670 Total: 19235140 Percentage: 16.936035
+8: In Diagonal: 3496272 Total: 19235140 Percentage: 18.176483
+9: In Diagonal: 3711782 Total: 19235140 Percentage: 19.29688
+10: In Diagonal: 3906554 Total: 19235140 Percentage: 20.309464
 
 /var/www/graphs/dblp2010/dblp2010.txt - SOCIAL
 1: In Diagonal: 188704 Total: 807700 Percentage: 23.36313       bits/edge: 3.1864402
@@ -54,3 +80,10 @@ To bits/edge είναι η συμπίεση του κομματιού της δ�
 2: In Diagonal: 6561132 Total: 79023142 Percentage: 8.302798   bits/edge: 3.2696803
 3: In Diagonal: 8146292 Total: 79023142 Percentage: 10.308742   bits/edge: 3.950166
 4: In Diagonal: 9435811 Total: 79023142 Percentage: 11.9405665  bits/edge: 4.5471034
+5: In Diagonal: 10533328 Total: 79023142 Percentage: 13.329422
+6: In Diagonal: 11491172 Total: 79023142 Percentage: 14.541527
+7: In Diagonal: 12344307 Total: 79023142 Percentage: 15.621129
+8: In Diagonal: 13112792 Total: 79023142 Percentage: 16.59361
+9: In Diagonal: 13812258 Total: 79023142 Percentage: 17.47875
+10: In Diagonal: 14453659 Total: 79023142 Percentage: 18.290413
+
