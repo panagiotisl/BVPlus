@@ -34,16 +34,16 @@ To bits/edge είναι η συμπίεση του κομματιού της δ�
 8: In Diagonal: 2779337 Total: 5158388 Percentage: 53.87995
 9: In Diagonal: 2894323 Total: 5158388 Percentage: 56.10906
 10:  In Diagonal: 2988384 Total: 5158388 Percentage: 57.932514
-1: bits/edge: 3.0352805 N: 735324
-2: bits/edge: 2.9578242 N: 735324
-3: bits/edge: 3.1168306 N: 735324
-4: bits/edge: 3.3413136 N: 735324
-5: bits/edge: 3.5995488 N: 735324
-6: bits/edge: 3.8809333 N: 735324
-7: bits/edge: 4.181787 N: 735324
-8: bits/edge: 4.4976583 N: 735324
-9: bits/edge: 4.8270893 N: 735324
-10: bits/edge: 5.167276 N: 735324
+1: bits/edge: 2.0235202	N: 735324
+2: bits/edge: 2.3662596	N: 735324
+3: bits/edge: 2.671569	N: 735324
+4: bits/edge: 2.9700565	N: 735324
+5: bits/edge: 3.272317	N: 735324
+6: bits/edge: 3.5823998	N: 735324
+7: bits/edge: 3.903001	N: 735324
+8: bits/edge: 4.23309	N: 735324
+9: bits/edge: 4.573032	N: 735324
+10: bits/edge: 4.921215	N: 735324
 
 /var/www/graphs/hollywood-2009/hollywood-2009.txt - SOCIAL
 1: In Diagonal: 1973712 Total: 57515616 Percentage: 3.4316108  bits/edge: 1.1550875
@@ -56,16 +56,16 @@ To bits/edge είναι η συμπίεση του κομματιού της δ�
 8: In Diagonal: 5326205 Total: 57515616 Percentage: 9.26045
 9: In Diagonal: 5640735 Total: 57515616 Percentage: 9.80731
 10: In Diagonal: 5932139 Total: 57515616 Percentage: 10.313962
-1: bits/edge: 1.7326328 N: 1139906
-2: bits/edge: 2.1476727 N: 1139906
-3: bits/edge: 2.4658232 N: 1139906
-4: bits/edge: 2.7383432 N: 1139906
-5: bits/edge: 2.984594	N: 1139906
-6: bits/edge: 3.2133827	N: 1139906
-7: bits/edge: 3.4302764	N: 1139906
-8: bits/edge: 3.6383133	N: 1139906
-9: bits/edge: 3.8396084	N: 1139906
-10: bits/edge: 4.035311	N: 1139906
+1: bits/edge: 1.1550884	N: 1139906
+2: bits/edge: 1.7181381	N: 1139906
+3: bits/edge: 2.1135626	N: 1139906
+4: bits/edge: 2.434083	N: 1139906
+5: bits/edge: 2.7132673	N: 1139906
+6: bits/edge: 2.9661994	N: 1139906
+7: bits/edge: 3.2015913	N: 1139906
+8: bits/edge: 3.4242947	N: 1139906
+9: bits/edge: 3.637524	N: 1139906
+10: bits/edge: 3.8431535	N: 1139906
 
 /var/www/graphs/cnr-2000/cnr-2000.txt
 1: In Diagonal: 252040 Total: 3216152 Percentage: 7.836694     bits/edge: 3.8750634
@@ -100,6 +100,16 @@ To bits/edge είναι η συμπίεση του κομματιού της δ�
 8: In Diagonal: 3496272 Total: 19235140 Percentage: 18.176483
 9: In Diagonal: 3711782 Total: 19235140 Percentage: 19.29688
 10: In Diagonal: 3906554 Total: 19235140 Percentage: 20.309464
+1: bits/edge: 2.2850056	N: 862665
+2: bits/edge: 2.667181	N: 862665
+3: bits/edge: 2.986206	N: 862665
+4: bits/edge: 3.259638	N: 862665
+5: bits/edge: 3.5103564	N: 862665
+6: bits/edge: 3.745381	N: 862665
+7: bits/edge: 3.9721565	N: 862665
+8: bits/edge: 4.194555	N: 862665
+9: bits/edge: 4.4158397	N: 862665
+10: bits/edge: 4.637326	N: 862665
 
 /var/www/graphs/dblp2010/dblp2010.txt - SOCIAL
 1: In Diagonal: 188704 Total: 807700 Percentage: 23.36313       bits/edge: 3.1864402
@@ -112,6 +122,16 @@ To bits/edge είναι η συμπίεση του κομματιού της δ�
 8: In Diagonal: 509065 Total: 807700 Percentage: 63.026494
 9: In Diagonal: 521132 Total: 807700 Percentage: 64.52049
 10: In Diagonal: 531127 Total: 807700 Percentage: 65.757954
+1: bits/edge: 3.4570968	N: 326184
+2: bits/edge: 4.3520794	N: 326184
+3: bits/edge: 5.2905283	N: 326184
+4: bits/edge: 6.255461	N: 326184
+5: bits/edge: 7.2407937	N: 326184
+6: bits/edge: 8.237559	N: 326184
+7: bits/edge: 9.243014	N: 326184
+8: bits/edge: 10.252019	N: 326184
+9: bits/edge: 11.2664585	N: 326184
+10: bits/edge: 12.282712	N: 326184
 
 /var/www/graphs/ljournal-2008/ljournal-2008.txt - SOCIAL
 1: In Diagonal: 4438341 Total: 79023142 Percentage: 5.6165077  bits/edge: 2.4167593
@@ -124,4 +144,13 @@ To bits/edge είναι η συμπίεση του κομματιού της δ�
 8: In Diagonal: 13112792 Total: 79023142 Percentage: 16.59361
 9: In Diagonal: 13812258 Total: 79023142 Percentage: 17.47875
 10: In Diagonal: 14453659 Total: 79023142 Percentage: 18.290413
-
+1: bits/edge: 2.4167864	N: 5363261
+2: bits/edge: 3.269717	N: 5363261
+3: bits/edge: 3.9502103	N: 5363261
+4: bits/edge: 4.5471544	N: 5363261
+5: bits/edge: 5.091706	N: 5363261
+6: bits/edge: 5.6007457	N: 5363261
+7: bits/edge: 6.082614	N: 5363261
+8: bits/edge: 6.5441575	N: 5363261
+9: bits/edge: 6.9893494	N: 5363261
+10: bits/edge: 7.421319	N: 5363261
