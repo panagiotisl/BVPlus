@@ -133,7 +133,7 @@ To bits/edge είναι η συμπίεση του κομματιού της δ�
 9: bits/edge: 11.2664585	N: 326184
 10: bits/edge: 12.282712	N: 326184
 
-/var/www/graphs/ljournal-2008/ljournal-2008.txt - SOCIAL
+/var/www/graphs/ljournal-2008/ljournal-2008.txt - SOCIAL (with self links)
 1: In Diagonal: 4438341 Total: 79023142 Percentage: 5.6165077  bits/edge: 2.4167593
 2: In Diagonal: 6561132 Total: 79023142 Percentage: 8.302798   bits/edge: 3.2696803
 3: In Diagonal: 8146292 Total: 79023142 Percentage: 10.308742   bits/edge: 3.950166
@@ -144,13 +144,13 @@ To bits/edge είναι η συμπίεση του κομματιού της δ�
 8: In Diagonal: 13112792 Total: 79023142 Percentage: 16.59361
 9: In Diagonal: 13812258 Total: 79023142 Percentage: 17.47875
 10: In Diagonal: 14453659 Total: 79023142 Percentage: 18.290413
-1: bits/edge: 2.4167864	N: 5363261
-2: bits/edge: 3.269717	N: 5363261
-3: bits/edge: 3.9502103	N: 5363261
-4: bits/edge: 4.5471544	N: 5363261
-5: bits/edge: 5.091706	N: 5363261
-6: bits/edge: 5.6007457	N: 5363261
-7: bits/edge: 6.082614	N: 5363261
-8: bits/edge: 6.5441575	N: 5363261
-9: bits/edge: 6.9893494	N: 5363261
-10: bits/edge: 7.421319	N: 5363261
+1: bits/edge: 3.6251795	N: 5363261
+2: bits/edge: 4.087146	N: 5363261
+3: bits/edge: 4.6085787	N: 5363261
+4: bits/edge: 5.1155486	N: 5363261
+5: bits/edge: 5.600877	N: 5363261
+6: bits/edge: 6.0674744	N: 5363261
+7: bits/edge: 6.517086	N: 5363261
+8: bits/edge: 6.9531674	N: 5363261
+9: bits/edge: 7.377647	N: 5363261
+10: bits/edge: 7.792385	N: 5363261
