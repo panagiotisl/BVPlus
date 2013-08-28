@@ -13,9 +13,9 @@ public class GetPercentage {
 		if(args.length<1)
 			throw new IllegalArgumentException("Usage: pathtograph [diagonal size]");
 		if(args.length==1)
-			System.out.println(SiVaCUtils.percentageInDiagonal(args[0],1));
+			SiVaCUtils.percentageInDiagonal(args[0],1);
 		else if(args.length==2)
-			System.out.println(SiVaCUtils.percentageInDiagonal(args[0],Integer.parseInt(args[1])));
+			SiVaCUtils.percentageInDiagonal(args[0],Integer.parseInt(args[1]));
 		else
 			throw new IllegalArgumentException("Usage: pathtograph [diagonal size]");
 

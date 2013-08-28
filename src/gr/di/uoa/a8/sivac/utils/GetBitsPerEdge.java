@@ -13,11 +13,11 @@ public class GetBitsPerEdge {
 		if (args.length < 1)
 			throw new IllegalArgumentException("Usage: String pathtograph [int diagonal size] [boolean social]");
 		if (args.length == 1)
-			System.out.println(SiVaCUtils.bitsPerEdge(args[0], 1, false));
+			SiVaCUtils.bitsPerEdge(args[0], 1, false);
 		else if (args.length == 2)
-			System.out.println(SiVaCUtils.bitsPerEdge(args[0], Integer.parseInt(args[1]), false));
+			SiVaCUtils.bitsPerEdge(args[0], Integer.parseInt(args[1]), false);
 		else if (args.length == 3)
-			System.out.println(SiVaCUtils.bitsPerEdge(args[0], Integer.parseInt(args[1]), Boolean.parseBoolean(args[2])));
+			SiVaCUtils.bitsPerEdge(args[0], Integer.parseInt(args[1]), Boolean.parseBoolean(args[2]));
 		else
 			throw new IllegalArgumentException("Usage: String pathtograph [int diagonal size] [boolean social]");
 	}

@@ -20,6 +20,7 @@ public class PerformComparison {
 
 	
 	private static Set<Integer> nodes = new HashSet<Integer>();
+	private static int size;
 	private static int edges = 0;
 	private static HashMap<Integer,Long> sizes = new HashMap<Integer, Long>();
 	
@@ -33,6 +34,7 @@ public class PerformComparison {
 		FileWriter fw = new FileWriter(file.getAbsoluteFile());
 		BufferedWriter bw = new BufferedWriter(fw);
 		String line;
+		int max = -1;
 		while ((line = br.readLine()) != null) {
 			String[] temp = line.split("\\s+");
 			int a = Integer.parseInt(temp[0]);
@@ -43,6 +45,11 @@ public class PerformComparison {
 				edges++;
 				nodes.add(a);
 				nodes.add(b);
+				if(a+1>max)
+					max = a+1;
+				if(b+1>max)
+					max = b+1;
+				size = max;
 			}
 			if(a>=b-D && a<=b+D)
 			{
@@ -62,6 +69,7 @@ public class PerformComparison {
 		String filename = args[0];
 		int iterations = Integer.parseInt(args[1]);
 		boolean social = Boolean.parseBoolean(args[2]);
+		boolean undirected = Boolean.parseBoolean(args[2]);
 		
 		System.out.println(filename);
 		
@@ -81,7 +89,7 @@ public class PerformComparison {
 		System.out.println("Boldi: "+(sizes.get(0)*8/(float)edges));
 		for(int i=1;i<=iterations;i++)
 		{
-			System.out.println(i+": "+((sizes.get(i)*8 + nodes.size()*2*i+(social ? 0 : 1))/(float)edges)+" ("+((sizes.get(i)*8)/(float)edges)+")");
+			System.out.println(i+": "+((sizes.get(i)*8 + size*(undirected ? 1 : 2)*i+(social ? 0 : 1))/(float)edges)+" ("+((sizes.get(i)*8)/(float)edges)+")");
 		}
 	}
 

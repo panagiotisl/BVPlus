@@ -258,7 +258,7 @@ public class SiVaCGraph extends ImmutableGraph {
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		SiVaCGraph a = SiVaCGraph.loadOnce(new FileInputStream(new File("/var/www/graphs/cnr-2000/cnr-2000.txt")), 1);
 		a.checkAllEdges(new FileInputStream(new File("/var/www/graphs/cnr-2000/cnr-2000.txt")));
-		a.getSuccessors(5);
+//		a.getSuccessors(5);
 		// a.store("test");
 	}
 
