@@ -241,8 +241,8 @@ public class CalculateFrequencies {
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 
-		String filename = "/var/www/graphs/cnr-2000/cnr-2000.txt";//args[0];
-		int iterations = 10;//Integer.parseInt(args[1]);
+		String filename = args[0];
+		int iterations = Integer.parseInt(args[1]);
 		for (int i = 1; i <= iterations; i++)
 			calculateFrequencies(new File(filename), i);
 	}

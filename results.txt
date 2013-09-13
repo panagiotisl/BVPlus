@@ -154,3 +154,47 @@ To bits/edge είναι η συμπίεση του κομματιού της δ�
 8: bits/edge: 6.9531674	N: 5363261
 9: bits/edge: 7.377647	N: 5363261
 10: bits/edge: 7.792385	N: 5363261
+
+/var/www/graphs/road/roadNet-CA.txt
+1: In Diagonal: 1648498 Total: 5533214 Percentage: 29.792774
+2: In Diagonal: 2188616 Total: 5533214 Percentage: 39.554153
+3: In Diagonal: 2422014 Total: 5533214 Percentage: 43.77228
+4: In Diagonal: 2585220 Total: 5533214 Percentage: 46.72185
+5: In Diagonal: 2706584 Total: 5533214 Percentage: 48.915222
+6: In Diagonal: 2804654 Total: 5533214 Percentage: 50.687614
+7: In Diagonal: 2885794 Total: 5533214 Percentage: 52.154026
+8: In Diagonal: 2954890 Total: 5533214 Percentage: 53.40278
+9: In Diagonal: 3015246 Total: 5533214 Percentage: 54.493576
+10: In Diagonal: 3068522 Total: 5533214 Percentage: 55.456413
+1: bits/edge: 3.5874128	N: 1971281
+2: bits/edge: 4.5034876	N: 1971281
+3: bits/edge: 5.697311	N: 1971281
+4: bits/edge: 6.862676	N: 1971281
+5: bits/edge: 8.011609	N: 1971281
+6: bits/edge: 9.137188	N: 1971281
+7: bits/edge: 10.246475	N: 1971281
+8: bits/edge: 11.341125	N: 1971281
+9: bits/edge: 12.421653	N: 1971281
+10: bits/edge: 13.490828	N: 1971281
+
+/var/www/graphs/road/roadNet-PA.txt
+1: In Diagonal: 809540 Total: 3083796 Percentage: 26.251411
+2: In Diagonal: 1108450 Total: 3083796 Percentage: 35.944336
+3: In Diagonal: 1241706 Total: 3083796 Percentage: 40.265503
+4: In Diagonal: 1334296 Total: 3083796 Percentage: 43.26797
+5: In Diagonal: 1403750 Total: 3083796 Percentage: 45.5202
+6: In Diagonal: 1460114 Total: 3083796 Percentage: 47.347942
+7: In Diagonal: 1508014 Total: 3083796 Percentage: 48.901226
+8: In Diagonal: 1549442 Total: 3083796 Percentage: 50.244633
+9: In Diagonal: 1585420 Total: 3083796 Percentage: 51.411312
+10: In Diagonal: 1617490 Total: 3083796 Percentage: 52.451263
+1: bits/edge: 4.0427403	N: 1090920
+2: bits/edge: 4.9209256	N: 1090920
+3: bits/edge: 6.149958	N: 1090920
+4: bits/edge: 7.358397	N: 1090920
+5: bits/edge: 8.548616	N: 1090920
+6: bits/edge: 9.712913	N: 1090920
+7: bits/edge: 10.851226	N: 1090920
+8: bits/edge: 11.969238	N: 1090920
+9: bits/edge: 13.07381	N: 1090920
+10: bits/edge: 14.1635	N: 1090920
