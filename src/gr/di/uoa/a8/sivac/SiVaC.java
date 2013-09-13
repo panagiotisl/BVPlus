@@ -47,7 +47,7 @@ public class SiVaC {
 	public static void main(String[] args) throws IOException {
 
 		System.out.println("SiVaC");
-		createNoDFile("/var/www/graphs/amazon-2008/amazon-2008.txt");
+		createNoDFile("/var/www/graphs/dblp2010/dblp2010.txt");
 
 	}
 
