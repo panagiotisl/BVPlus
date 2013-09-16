@@ -8,107 +8,66 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.StringUtils;
+
 public class CalculateFrequencies {
 
-
-	
-	public static void calculateFrequencies(byte[] array, int size, int D) throws NumberFormatException, IOException {
-
-		Map<String, Integer> freqs = new HashMap<String, Integer>();
+	public static Map<String, String> calculateFrequencies(byte[] array, int size, int D, int bits) throws NumberFormatException, IOException {
 		Map<String, Integer> freqsX = new HashMap<String, Integer>();
-		ValueComparator bvc =  new ValueComparator(freqsX);
-        TreeMap<String,Integer> sorted_map = new TreeMap<String,Integer>(bvc);
-		for (int i = 0; i < size; i++)
-		{
+		ValueComparator bvc = new ValueComparator(freqsX);
+		TreeMap<String, Integer> sorted_map = new TreeMap<String, Integer>(bvc);
+		for (int i = 0; i < size; i++) {
 			String number = "";
 			int count = 0;
-			for(int j=i-D;j<i+D+1;j++)
-			{
-				try
-				{
+			for (int j = i - D; j < i + D + 1; j++) {
+				try {
 					int no = SiVaCGraph.getSerialization(i, j, size, D);
-					if(SiVaCGraph.isSet(array[no / 8], no % 8))
-					{
+					if (SiVaCGraph.isSet(array[no / 8], no % 8)) {
 						number += "1";
 						count++;
-					}
-					else
-					{
+					} else {
 						number += "0";
 					}
-							
-				}
-				catch(Exception e)
-				{
+
+				} catch (Exception e) {
 					number += "0";
 				}
-				
+
 			}
-			if (!freqs.containsKey(number))
-			{
-				freqs.put(number, 1);
+			if (!freqsX.containsKey(number)) {
 				freqsX.put(number, count);
 			}
-				
-			else
-			{
-				freqs.put(number, freqs.get(number) + 1);
+
+			else {
 				freqsX.put(number, freqsX.get(number) + count);
 			}
-				
+
 		}
-		
-		System.out.println("Possible values of diagonal: " + freqs.size()+" and size of diagonal: "+D);
-		
-		
-		// code for adaptive dictionary
 		sorted_map.putAll(freqsX);
-		System.out.println(D + ": " + sorted_map);
 		Object[] keys = sorted_map.keySet().toArray();
-		for(int bits=2;bits<=D;bits++)
+		Map<String, String> map = new HashMap<String,String>();
+		char[] chars = new char[bits];
+		Arrays.fill(chars, '0');
+		map.put(new String(chars), padLeft(Integer.toBinaryString(0), bits));
+		for(int i=0;i<((int) Math.pow(2, bits) - 1); i++)
 		{
-			int pv = freqs.size();
-			int new_edges = 0, captured_edges = 0, total_edges = 0;
-			for(int i=((int)Math.pow(bits, 2)-1);i<pv-1;i++)
-			{
-				int temp = -1, temp2 = 0;
-				String key = "";
-				for(int j=0;j<((int)Math.pow(bits, 2)-1);j++)
-				{
-					temp2 = SiVaCUtils.subset((String)keys[j], (String)keys[i]);
-					if(temp2>temp)
-					{
-						temp = temp2;
-						key = (String)keys[j];
-					}
-						
-				}
-				//System.out.println((String)keys[i]+" " + key + " " + temp+" "+freqsX.get((String)keys[i])+" "+freqsX.get((String)keys[i])*SiVaCUtils.fracture((String)keys[i], temp));
-				captured_edges += freqsX.get((String)keys[i])*SiVaCUtils.fracture((String)keys[i], temp);
-			}
-			new_edges = captured_edges;
-			for(int i=0;i<((int)Math.pow(bits, 2)-1);i++)
-				captured_edges += freqsX.get((String)keys[i]);
-			for(int i=0;i<pv;i++)
-				total_edges += freqsX.get((String)keys[i]);
-			System.out.println(captured_edges+" "+total_edges+" "+(double)captured_edges/total_edges+" "+(double)new_edges/total_edges);
-			System.out.println("bits/edge: "+bits*size/(double)captured_edges+" with "+bits+" bits.");
-			
+			map.put((String)keys[i], padLeft(Integer.toBinaryString(i+1), bits));
 		}
-		
-	}	
-	
+		return map;
+	}
+
 	private static void calculateFrequencies(File file, int D) throws NumberFormatException, IOException {
 
 		Map<String, Integer> freqs = new HashMap<String, Integer>();
 		Map<String, Integer> freqsX = new HashMap<String, Integer>();
-		ValueComparator bvc =  new ValueComparator(freqsX);
-        TreeMap<String,Integer> sorted_map = new TreeMap<String,Integer>(bvc);
+		ValueComparator bvc = new ValueComparator(freqsX);
+		TreeMap<String, Integer> sorted_map = new TreeMap<String, Integer>(bvc);
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 		String line;
 		int max = -1;
@@ -116,10 +75,10 @@ public class CalculateFrequencies {
 			String[] temp = line.split("\\s+");
 			int a = Integer.parseInt(temp[0]);
 			int b = Integer.parseInt(temp[1]);
-			if(a >= max)
-				max = a+1;
-			if(b >= max)
-				max = b+1;
+			if (a >= max)
+				max = a + 1;
+			if (b >= max)
+				max = b + 1;
 		}
 		int size = max;
 		System.out.println("Size: " + size);
@@ -133,112 +92,105 @@ public class CalculateFrequencies {
 			int b = Integer.parseInt(temp[1]);
 			if (SiVaCUtils.isDiagonal(a, b, D)) {
 				int no = SiVaCGraph.getSerialization(a, b, size, D);
-				try{
+				try {
 					array[no / 8] = SiVaCGraph.set_bit(array[no / 8], no % 8);
-				}catch(Exception e){
+				} catch (Exception e) {
 					System.err.println(no / 8 + " " + array.length);
 				}
 			}
 
 		}
 		br.close();
-		for (int i = 0; i < size; i++)
-		{
+		for (int i = 0; i < size; i++) {
 			String number = "";
 			int count = 0;
-			for(int j=i-D;j<i+D+1;j++)
-			{
-				try
-				{
+			for (int j = i - D; j < i + D + 1; j++) {
+				try {
 					int no = SiVaCGraph.getSerialization(i, j, size, D);
-					if(SiVaCGraph.isSet(array[no / 8], no % 8))
-					{
+					if (SiVaCGraph.isSet(array[no / 8], no % 8)) {
 						number += "1";
 						count++;
-					}
-					else
-					{
+					} else {
 						number += "0";
 					}
-							
-				}
-				catch(Exception e)
-				{
+
+				} catch (Exception e) {
 					number += "0";
 				}
-				
+
 			}
-			if (!freqs.containsKey(number))
-			{
+			if (!freqs.containsKey(number)) {
 				freqs.put(number, 1);
 				freqsX.put(number, count);
 			}
-				
-			else
-			{
+
+			else {
 				freqs.put(number, freqs.get(number) + 1);
 				freqsX.put(number, freqsX.get(number) + count);
 			}
-				
+
 		}
-		
-		System.out.println("Possible values of diagonal: " + freqs.size()+" and size of diagonal: "+D);
-		
-		
+
+		System.out.println("Possible values of diagonal: " + freqs.size() + " and size of diagonal: " + D);
+
 		// code for adaptive dictionary
 		sorted_map.putAll(freqsX);
 		System.out.println(D + ": " + sorted_map);
 		Object[] keys = sorted_map.keySet().toArray();
-		for(int bits=2;bits<=D;bits++)
-		{
+		for (int bits = 2; bits <= D; bits++) {
 			int pv = freqs.size();
 			int new_edges = 0, captured_edges = 0, total_edges = 0;
-			for(int i=((int)Math.pow(bits, 2)-1);i<pv-1;i++)
-			{
+			for (int i = ((int) Math.pow(2, bits) - 1); i < pv - 1; i++) {
 				int temp = -1, temp2 = 0;
-				String key = "";
-				for(int j=0;j<((int)Math.pow(bits, 2)-1);j++)
-				{
-					temp2 = SiVaCUtils.subset((String)keys[j], (String)keys[i]);
-					if(temp2>temp)
-					{
+//				String key = "";
+				for (int j = 0; j < ((int) Math.pow(2, bits) - 1); j++) {
+					temp2 = SiVaCUtils.subset((String) keys[j], (String) keys[i]);
+					if (temp2 > temp) {
 						temp = temp2;
-						key = (String)keys[j];
+//						key = (String) keys[j];
 					}
-						
+
 				}
-				//System.out.println((String)keys[i]+" " + key + " " + temp+" "+freqsX.get((String)keys[i])+" "+freqsX.get((String)keys[i])*SiVaCUtils.fracture((String)keys[i], temp));
-				captured_edges += freqsX.get((String)keys[i])*SiVaCUtils.fracture((String)keys[i], temp);
+				// System.out.println((String)keys[i]+" " + key + " " +
+				// temp+" "+freqsX.get((String)keys[i])+" "+freqsX.get((String)keys[i])*SiVaCUtils.fracture((String)keys[i],
+				// temp));
+				captured_edges += freqsX.get((String) keys[i]) * SiVaCUtils.fracture((String) keys[i], temp);
 			}
 			new_edges = captured_edges;
-			for(int i=0;i<((int)Math.pow(bits, 2)-1);i++)
-				captured_edges += freqsX.get((String)keys[i]);
-			for(int i=0;i<pv;i++)
-				total_edges += freqsX.get((String)keys[i]);
-			System.out.println(captured_edges+" "+total_edges+" "+(double)captured_edges/total_edges+" "+(double)new_edges/total_edges);
-			System.out.println("bits/edge: "+bits*size/(double)captured_edges+" with "+bits+" bits.");
-			
+			for (int i = 0; i < ((int) Math.pow(2, bits) - 1); i++)
+				captured_edges += freqsX.get((String) keys[i]);
+			for (int i = 0; i < pv; i++)
+				total_edges += freqsX.get((String) keys[i]);
+			System.out.println(captured_edges + " " + total_edges + " " + (double) captured_edges / total_edges + " " + (double) new_edges / total_edges);
+			System.out.println("bits/edge: " + bits * size / (double) captured_edges + " with " + bits + " bits.");
+
 		}
-		
+
 	}
 
+	public static String padLeft(String s, int n) {
+		return StringUtils.leftPad(s, n, "0");
+	    //return String.format("%1$" + n + "s", s);  
+	}
+	
 	private static class ValueComparator implements Comparator<String> {
 
-	    Map<String, Integer> base;
-	    public ValueComparator(Map<String, Integer> base) {
-	        this.base = base;
-	    }
+		Map<String, Integer> base;
+
+		public ValueComparator(Map<String, Integer> base) {
+			this.base = base;
+		}
 
 		@Override
 		public int compare(String a, String b) {
 			if (base.get(a) >= base.get(b)) {
-	            return -1;
-	        } else {
-	            return 1;
-	        } // returning 0 would merge keys
+				return -1;
+			} else {
+				return 1;
+			} // returning 0 would merge keys
 		}
 	}
-	
+
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 
 		String filename = args[0];
