@@ -4,12 +4,12 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashSet;
 import java.util.Map;
 
 import com.google.common.io.Files;
@@ -30,6 +30,7 @@ public class SiVaCGraph extends ImmutableGraph {
 	private int size = 0; /* number of nodes in the graph */
 	private int edges;
 	private byte[] diagonal /* the diagonal as bytes */;
+	private byte[] compressedDiagonal;
 	private Map<String, String> map;
 	private File tempD /*
 						 * file descriptor for a temp file with the arc list for
@@ -39,22 +40,36 @@ public class SiVaCGraph extends ImmutableGraph {
 						 * file descriptor for a temp file with the arc list for
 						 * the non diagonal part
 						 */;
-	private HashSet<Integer> nodes;
+//	private HashSet<Integer> nodes;
 
-	public SiVaCGraph(InputStream is, int d, int bits, String basename) throws IOException {
+	public SiVaCGraph(File input, int d, int bits, String basename) throws IOException {
 		this.D = d;
 		this.bits = bits;
-		this.nodes = new HashSet<Integer>();
-		createTempFiles(is);
+//		this.nodes = new HashSet<Integer>();
+		createTempFiles(new FileInputStream(input));
 		this.diagonal = createDiagonal(this.tempD, this.D, this.size);
 		this.map = CalculateFrequencies.calculateFrequencies(this.diagonal, this.size, this.D, this.bits);
-		createCompressedDiagonal(this.tempNoD, this.D, this.size, this.bits, this.map, this.diagonal);
+		this.compressedDiagonal = createCompressedDiagonal(input, this.tempNoD, this.D, this.size, this.bits, this.map, this.diagonal);
+		this.storeCompressedDiagonal(basename);
 		this.ig = ArcListASCIIGraph.loadOnce(new FileInputStream(tempNoD));
+		this.storeNonDiagonal(basename);
 		this.ig = BVGraph.load(basename);
 	}
 
-	private static void createCompressedDiagonal(File tempNoD, int D, int size, int bits, Map<String, String> map, byte[] array) {
+	private static byte[] createCompressedDiagonal(File input, File tempNoD, int D, int size, int bits, Map<String, String> map, byte[] array) {
 		byte[] compressedDiagonal = new byte[(size*bits)/8 + (((size*bits)%8==0) ? 0 : 1)];
+		BufferedReader br;
+		BufferedWriter bwNoD;
+		try {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(input)));
+			bwNoD = new BufferedWriter(new FileWriter(tempNoD.getAbsoluteFile()));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 		for (int i = 0; i < size; i++) {
 			String number = "";
 			for (int j = i - D; j < i + D + 1; j++) {
@@ -70,28 +85,67 @@ public class SiVaCGraph extends ImmutableGraph {
 				}
 			}
 			if (!map.containsKey(number)) {
-				putEdgesInNonDiagonalPart(number, tempNoD);
+				if(number.contains("1"))
+				{
+					putEdgesInNonDiagonalFile(i, number, tempNoD, br, D, bwNoD);	
+				}
 			}
 			else {
-				putCompressedInArray(i, map.get(number), compressedDiagonal);
+				compressedDiagonal = putCompressedInArray(i, map.get(number), compressedDiagonal);
 			}
+		}
+		try {
+			writeNonDiagonal(-1, br, D, bwNoD);
+			br.close();
+			bwNoD.flush();
+			bwNoD.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return compressedDiagonal;
+	}
 
+	private static void putEdgesInNonDiagonalFile(int node, String number, File file, BufferedReader br, int D, BufferedWriter bwNoD) {
+		char[] chars = number.toCharArray();
+		try {
+			int bits = chars.length;
+			writeNonDiagonal(node, br, D, bwNoD);
+			for(int i=0;i<chars.length;i++)
+			{
+				if(chars[i]=='1')
+				{
+					bwNoD.write(node+" "+(node + i - bits/2)+"\n");
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
-	private static void putEdgesInNonDiagonalPart(String number, File tempNoD2) {
-		
-		
+	private static void writeNonDiagonal(int node, BufferedReader br, int D, BufferedWriter bwNoD) throws IOException {
+		String line;
+		while ((line = br.readLine()) != null) {
+			String[] temp = line.split("\\s+");
+			int a = Integer.parseInt(temp[0]);
+			int b = Integer.parseInt(temp[1]);
+			if (!SiVaCUtils.isDiagonal(a, b, D)) {
+				bwNoD.write(line + '\n');
+			}
+			if(a==node)
+				break;
+		}
 	}
 
-	private static void putCompressedInArray(int node, String string, byte[] compressedDiagonal) {
+	private static byte[] putCompressedInArray(int node, String string, byte[] compressedDiagonal) {
 		char[] chars = string.toCharArray();
 		int pos = node * chars.length;
 		for(int i=0;i<chars.length;i++)
 		{
 			if(chars[i]==1)
-				set_bit(compressedDiagonal[(pos/8)], pos%8);
+				compressedDiagonal[(pos/8)] = set_bit(compressedDiagonal[(pos/8)], pos%8);
 		}
+		return compressedDiagonal;
 	}
 
 	/**
@@ -105,17 +159,17 @@ public class SiVaCGraph extends ImmutableGraph {
 		tempD = File.createTempFile("SiVaC-D-", ".a8");
 		tempNoD = File.createTempFile("SiVaC-NoD-", ".a8");
 		tempD.deleteOnExit();
-		tempNoD.deleteOnExit();
+//		tempNoD.deleteOnExit();
 		BufferedWriter bwD = new BufferedWriter(new FileWriter(tempD.getAbsoluteFile()));
-		BufferedWriter bwNoD = new BufferedWriter(new FileWriter(tempNoD.getAbsoluteFile()));
+//		BufferedWriter bwNoD = new BufferedWriter(new FileWriter(tempNoD.getAbsoluteFile()));
 		String line;
 		while ((line = br.readLine()) != null) {
 			String[] temp = line.split("\\s+");
 			int a = Integer.parseInt(temp[0]);
 			int b = Integer.parseInt(temp[1]);
-			this.nodes.add(a);
-			this.nodes.add(b);
-			this.edges++;
+//			this.nodes.add(a);
+//			this.nodes.add(b);
+//			this.edges++;
 			// size of the graph (nodes size) is equal to the largest + 1
 			if (a >= this.size)
 				this.size = a + 1;
@@ -125,14 +179,14 @@ public class SiVaCGraph extends ImmutableGraph {
 			if (SiVaCUtils.isDiagonal(a, b, D)) {
 				// in the diagonal
 				bwD.write(line + '\n');
-			} else {
+//			} else {
 				// outside the diagonal
-				bwNoD.write(line + '\n');
+//				bwNoD.write(line + '\n');
 			}
 		}
 		br.close();
 		bwD.close();
-		bwNoD.close();
+//		bwNoD.close();
 		return true;
 	}
 
@@ -185,14 +239,10 @@ public class SiVaCGraph extends ImmutableGraph {
 		return (byte) (my_byte & ~(1 << pos));
 	}
 
-	// public static SiVaCGraph loadOnce(InputStream is) {
-	// return loadOnce(is, 1);
-	// }
-
-	public static SiVaCGraph createAndLoad(InputStream is, int d, int nb, String basename) {
+	public static SiVaCGraph createAndLoad(File file, int d, int nb, String basename) {
 		SiVaCGraph sg;
 		try {
-			sg = new SiVaCGraph(is, d, nb, basename);
+			sg = new SiVaCGraph(file, d, nb, basename);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
@@ -228,7 +278,6 @@ public class SiVaCGraph extends ImmutableGraph {
 
 	private static byte[] createDiagonal(File tempD, int D, int size) {
 		// store diagonal part
-		// TODO check!
 		int largest = getSerialization(size - 1, size - 1, size, D);
 		byte[] diagonal = new byte[largest / 8 + (largest % 8 != 0 ? 1 : 0)];
 		String line;
@@ -262,6 +311,20 @@ public class SiVaCGraph extends ImmutableGraph {
 		return true;
 	}
 		
+	public boolean storeCompressedDiagonal(String basename)
+	{
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(basename + "." + SiVaC_EXTENSION);
+			fos.write(this.compressedDiagonal);
+			fos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
 	public boolean storeNonDiagonal(String basename)
 	{
 		// store non diagonal part as BVGraph
@@ -310,10 +373,10 @@ public class SiVaCGraph extends ImmutableGraph {
 	}
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
-		SiVaCGraph a = SiVaCGraph.createAndLoad(new FileInputStream(new File("/var/www/graphs/cnr-2000/cnr-2000.txt")), 3, 3, "test");
-		a.checkAllEdges(new FileInputStream(new File("/var/www/graphs/cnr-2000/cnr-2000.txt")));
+		SiVaCGraph a = SiVaCGraph.createAndLoad(new File("/var/www/graphs/cnr-2000/cnr-2000-zero.txt"), 3, 3, "test");
+		a.checkAllEdges(new FileInputStream(new File("/var/www/graphs/cnr-2000/cnr-2000-zero.txt")));
 		// a.getSuccessors(5);
-		// a.store("test");
+		System.out.println(a.getSuccessors(318).nextInt());
 	}
 
 }
