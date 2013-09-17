@@ -14,11 +14,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.collections.BidiMap;
+import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import org.apache.commons.lang.StringUtils;
 
 public class CalculateFrequencies {
 
-	public static Map<String, String> calculateFrequencies(byte[] array, int size, int D, int bits) throws NumberFormatException, IOException {
+	public static BidiMap calculateFrequencies(byte[] array, int size, int D, int bits) throws NumberFormatException, IOException {
 		Map<String, Integer> freqsX = new HashMap<String, Integer>();
 		ValueComparator bvc = new ValueComparator(freqsX);
 		TreeMap<String, Integer> sorted_map = new TreeMap<String, Integer>(bvc);
@@ -51,10 +53,12 @@ public class CalculateFrequencies {
 		}
 		sorted_map.putAll(freqsX);
 		Object[] keys = sorted_map.keySet().toArray();
-		Map<String, String> map = new HashMap<String,String>();
+		BidiMap map = new DualHashBidiMap();
 		char[] chars = new char[bits];
 		Arrays.fill(chars, '0');
-		map.put(new String(chars), padLeft(Integer.toBinaryString(0), bits));
+		char[] morechars = new char[(2*D+1)];
+		Arrays.fill(morechars, '0');
+		map.put(new String(morechars), new String(chars));
 		for(int i=0;i<((int) Math.pow(2, bits) - 1); i++)
 		{
 			map.put((String)keys[i], padLeft(Integer.toBinaryString(i+1), bits));

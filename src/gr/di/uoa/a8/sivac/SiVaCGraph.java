@@ -10,7 +10,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Map;
+
+import org.apache.commons.collections.BidiMap;
 
 import com.google.common.io.Files;
 
@@ -31,7 +32,7 @@ public class SiVaCGraph extends ImmutableGraph {
 	private int edges;
 	private byte[] diagonal /* the diagonal as bytes */;
 	private byte[] compressedDiagonal;
-	private Map<String, String> map;
+	private BidiMap map;
 	private File tempD /*
 						 * file descriptor for a temp file with the arc list for
 						 * the diagonal part
@@ -40,12 +41,13 @@ public class SiVaCGraph extends ImmutableGraph {
 						 * file descriptor for a temp file with the arc list for
 						 * the non diagonal part
 						 */;
-//	private HashSet<Integer> nodes;
+
+	// private HashSet<Integer> nodes;
 
 	public SiVaCGraph(File input, int d, int bits, String basename) throws IOException {
 		this.D = d;
 		this.bits = bits;
-//		this.nodes = new HashSet<Integer>();
+		// this.nodes = new HashSet<Integer>();
 		createTempFiles(new FileInputStream(input));
 		this.diagonal = createDiagonal(this.tempD, this.D, this.size);
 		this.map = CalculateFrequencies.calculateFrequencies(this.diagonal, this.size, this.D, this.bits);
@@ -56,8 +58,8 @@ public class SiVaCGraph extends ImmutableGraph {
 		this.ig = BVGraph.load(basename);
 	}
 
-	private static byte[] createCompressedDiagonal(File input, File tempNoD, int D, int size, int bits, Map<String, String> map, byte[] array) {
-		byte[] compressedDiagonal = new byte[(size*bits)/8 + (((size*bits)%8==0) ? 0 : 1)];
+	private static byte[] createCompressedDiagonal(File input, File tempNoD, int D, int size, int bits, BidiMap map, byte[] array) {
+		byte[] compressedDiagonal = new byte[(size * bits) / 8 + (((size * bits) % 8 == 0) ? 0 : 1)];
 		BufferedReader br;
 		BufferedWriter bwNoD;
 		try {
@@ -85,16 +87,15 @@ public class SiVaCGraph extends ImmutableGraph {
 				}
 			}
 			if (!map.containsKey(number)) {
-				if(number.contains("1"))
-				{
-					putEdgesInNonDiagonalFile(i, number, tempNoD, br, D, bwNoD);	
+				if (number.contains("1")) {
+					putEdgesInNonDiagonalFile(i, number, tempNoD, br, D, bwNoD);
 				}
-			}
-			else {
-				compressedDiagonal = putCompressedInArray(i, map.get(number), compressedDiagonal);
+			} else {
+				compressedDiagonal = putCompressedInArray(i, (String)map.get(number), compressedDiagonal);
 			}
 		}
 		try {
+			// write the rest of the non diagonal edges
 			writeNonDiagonal(-1, br, D, bwNoD);
 			br.close();
 			bwNoD.flush();
@@ -111,11 +112,9 @@ public class SiVaCGraph extends ImmutableGraph {
 		try {
 			int bits = chars.length;
 			writeNonDiagonal(node, br, D, bwNoD);
-			for(int i=0;i<chars.length;i++)
-			{
-				if(chars[i]=='1')
-				{
-					bwNoD.write(node+" "+(node + i - bits/2)+"\n");
+			for (int i = 0; i < chars.length; i++) {
+				if (chars[i] == '1') {
+					bwNoD.write(node + " " + (node + i - bits / 2) + "\n");
 				}
 			}
 		} catch (IOException e) {
@@ -132,7 +131,7 @@ public class SiVaCGraph extends ImmutableGraph {
 			if (!SiVaCUtils.isDiagonal(a, b, D)) {
 				bwNoD.write(line + '\n');
 			}
-			if(a==node)
+			if (a == node)
 				break;
 		}
 	}
@@ -140,10 +139,12 @@ public class SiVaCGraph extends ImmutableGraph {
 	private static byte[] putCompressedInArray(int node, String string, byte[] compressedDiagonal) {
 		char[] chars = string.toCharArray();
 		int pos = node * chars.length;
-		for(int i=0;i<chars.length;i++)
-		{
-			if(chars[i]==1)
-				compressedDiagonal[(pos/8)] = set_bit(compressedDiagonal[(pos/8)], pos%8);
+		for (int i = 0; i < chars.length; i++) {
+			if (chars[i] == '1')
+			{
+				compressedDiagonal[(pos / 8)] = set_bit(compressedDiagonal[(pos / 8)], pos % 8);
+				pos++;
+			}
 		}
 		return compressedDiagonal;
 	}
@@ -159,17 +160,13 @@ public class SiVaCGraph extends ImmutableGraph {
 		tempD = File.createTempFile("SiVaC-D-", ".a8");
 		tempNoD = File.createTempFile("SiVaC-NoD-", ".a8");
 		tempD.deleteOnExit();
-//		tempNoD.deleteOnExit();
+		tempNoD.deleteOnExit();
 		BufferedWriter bwD = new BufferedWriter(new FileWriter(tempD.getAbsoluteFile()));
-//		BufferedWriter bwNoD = new BufferedWriter(new FileWriter(tempNoD.getAbsoluteFile()));
 		String line;
 		while ((line = br.readLine()) != null) {
 			String[] temp = line.split("\\s+");
 			int a = Integer.parseInt(temp[0]);
 			int b = Integer.parseInt(temp[1]);
-//			this.nodes.add(a);
-//			this.nodes.add(b);
-//			this.edges++;
 			// size of the graph (nodes size) is equal to the largest + 1
 			if (a >= this.size)
 				this.size = a + 1;
@@ -179,14 +176,13 @@ public class SiVaCGraph extends ImmutableGraph {
 			if (SiVaCUtils.isDiagonal(a, b, D)) {
 				// in the diagonal
 				bwD.write(line + '\n');
-//			} else {
+				// } else {
 				// outside the diagonal
-//				bwNoD.write(line + '\n');
+				// bwNoD.write(line + '\n');
 			}
 		}
 		br.close();
 		bwD.close();
-//		bwNoD.close();
 		return true;
 	}
 
@@ -296,9 +292,8 @@ public class SiVaCGraph extends ImmutableGraph {
 		}
 		return diagonal;
 	}
-	
-	public boolean storeDiagonal(String basename)
-	{
+
+	public boolean storeDiagonal(String basename) {
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(basename + "." + SiVaC_EXTENSION);
@@ -310,9 +305,8 @@ public class SiVaCGraph extends ImmutableGraph {
 		}
 		return true;
 	}
-		
-	public boolean storeCompressedDiagonal(String basename)
-	{
+
+	public boolean storeCompressedDiagonal(String basename) {
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(basename + "." + SiVaC_EXTENSION);
@@ -324,9 +318,8 @@ public class SiVaCGraph extends ImmutableGraph {
 		}
 		return true;
 	}
-	
-	public boolean storeNonDiagonal(String basename)
-	{
+
+	public boolean storeNonDiagonal(String basename) {
 		// store non diagonal part as BVGraph
 		try {
 			ImmutableGraph.store(BVGraph.class, this.ig, basename);
@@ -343,16 +336,31 @@ public class SiVaCGraph extends ImmutableGraph {
 
 	public boolean isSuccessor(int a, int b) {
 		if (SiVaCUtils.isDiagonal(a, b, D)) {
-			int no = getSerialization(a, b, size, D);
-			return (isSet(this.diagonal[no / 8], no % 8));
-		} else {
-			int[] temp = this.ig.successorArray(a);
-			for (int suc : temp) {
-				if (suc == b)
-					return true;
+			if(checkCompressedDiagonal(a, b , D, bits))
+			{
+				return true;
 			}
+			// int no = getSerialization(a, b, size, D);
+			// return (isSet(this.diagonal[no / 8], no % 8));
+		}
+		int[] temp = this.ig.successorArray(a);
+		for (int suc : temp) {
+			if (suc == b)
+				return true;
 		}
 		return false;
+	}
+
+	private boolean checkCompressedDiagonal(int a, int b, int D, int bits) {
+		char[] chars = new char[bits];
+		int pos = a * bits;
+		for(int i=0;i<bits;i++)
+		{
+			chars[i] = (isSet(compressedDiagonal[pos/8], pos%8)) ? '1' : '0';
+			pos++;
+		}
+		System.out.println(new String(chars)+" "+(String)map.getKey(new String(chars))+" "+b+" "+a+" "+D);
+		return ((String)map.getKey(new String(chars))).toCharArray()[b-a+D]=='1';
 	}
 
 	public LazyIntIterator getSuccessors(int a) {
