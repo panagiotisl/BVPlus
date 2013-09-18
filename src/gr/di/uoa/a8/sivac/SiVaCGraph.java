@@ -143,8 +143,8 @@ public class SiVaCGraph extends ImmutableGraph {
 			if (chars[i] == '1')
 			{
 				compressedDiagonal[(pos / 8)] = set_bit(compressedDiagonal[(pos / 8)], pos % 8);
-				pos++;
 			}
+			pos++;
 		}
 		return compressedDiagonal;
 	}
@@ -202,7 +202,6 @@ public class SiVaCGraph extends ImmutableGraph {
 				temp--;
 			}
 		}
-		// TODO correct?
 		temp = 1;
 		// remove missing from end
 		for (int i = size + 1 - D; i < size; i++) {
@@ -336,12 +335,10 @@ public class SiVaCGraph extends ImmutableGraph {
 
 	public boolean isSuccessor(int a, int b) {
 		if (SiVaCUtils.isDiagonal(a, b, D)) {
-			if(checkCompressedDiagonal(a, b , D, bits))
+			if(checkCompressedDiagonal(a, b , D, bits, compressedDiagonal))
 			{
 				return true;
 			}
-			// int no = getSerialization(a, b, size, D);
-			// return (isSet(this.diagonal[no / 8], no % 8));
 		}
 		int[] temp = this.ig.successorArray(a);
 		for (int suc : temp) {
@@ -351,7 +348,7 @@ public class SiVaCGraph extends ImmutableGraph {
 		return false;
 	}
 
-	private boolean checkCompressedDiagonal(int a, int b, int D, int bits) {
+	private boolean checkCompressedDiagonal(int a, int b, int D, int bits, byte[] compressedDiagonal) {
 		char[] chars = new char[bits];
 		int pos = a * bits;
 		for(int i=0;i<bits;i++)
@@ -359,7 +356,7 @@ public class SiVaCGraph extends ImmutableGraph {
 			chars[i] = (isSet(compressedDiagonal[pos/8], pos%8)) ? '1' : '0';
 			pos++;
 		}
-		System.out.println(new String(chars)+" "+(String)map.getKey(new String(chars))+" "+b+" "+a+" "+D);
+//		System.out.println(new String(chars)+" "+(String)map.getKey(new String(chars))+" "+b+" "+a+" "+D);
 		return ((String)map.getKey(new String(chars))).toCharArray()[b-a+D]=='1';
 	}
 
