@@ -29,7 +29,7 @@ public class SiVaCGraph extends ImmutableGraph {
 	private int D;
 	private int bits;
 	private int size = 0; /* number of nodes in the graph */
-	private int edges;
+	private int edges = 0;
 	private byte[] diagonal /* the diagonal as bytes */;
 	private byte[] compressedDiagonal;
 	private BidiMap map;
@@ -88,10 +88,10 @@ public class SiVaCGraph extends ImmutableGraph {
 			}
 			if (!map.containsKey(number)) {
 				if (number.contains("1")) {
-					putEdgesInNonDiagonalFile(i, number, tempNoD, br, D, bwNoD);
+					putEdgesInNonDiagonalFile(i, number, tempNoD, br, D, bwNoD, map, compressedDiagonal);
 				}
 			} else {
-				compressedDiagonal = putCompressedInArray(i, (String)map.get(number), compressedDiagonal);
+				compressedDiagonal = putCompressedInArray(i, (String) map.get(number), compressedDiagonal);
 			}
 		}
 		try {
@@ -107,14 +107,25 @@ public class SiVaCGraph extends ImmutableGraph {
 		return compressedDiagonal;
 	}
 
-	private static void putEdgesInNonDiagonalFile(int node, String number, File file, BufferedReader br, int D, BufferedWriter bwNoD) {
+	private static void putEdgesInNonDiagonalFile(int node, String number, File file, BufferedReader br, int D, BufferedWriter bwNoD, BidiMap map, byte[] compressedDiagonal) {
+
+		int temp = -1, temp2 = 0;
+		String representation = "";
+		for (Object key : map.keySet()) {
+			temp2 = SiVaCUtils.subset((String) key, number);
+			if (temp2 > temp) {
+				temp = temp2;
+				representation = (String) key;
+			}
+		}
+		putCompressedInArray(node, (String) map.get(representation), compressedDiagonal);
 		char[] chars = number.toCharArray();
+		char[] rep_chars = representation.toCharArray();
 		try {
-			int bits = chars.length;
 			writeNonDiagonal(node, br, D, bwNoD);
 			for (int i = 0; i < chars.length; i++) {
-				if (chars[i] == '1') {
-					bwNoD.write(node + " " + (node + i - bits / 2) + "\n");
+				if (chars[i] == '1' && rep_chars[i] != '1') {
+					bwNoD.write(node + " " + (node + i - D) + "\n");
 				}
 			}
 		} catch (IOException e) {
@@ -140,8 +151,7 @@ public class SiVaCGraph extends ImmutableGraph {
 		char[] chars = string.toCharArray();
 		int pos = node * chars.length;
 		for (int i = 0; i < chars.length; i++) {
-			if (chars[i] == '1')
-			{
+			if (chars[i] == '1') {
 				compressedDiagonal[(pos / 8)] = set_bit(compressedDiagonal[(pos / 8)], pos % 8);
 			}
 			pos++;
@@ -164,6 +174,7 @@ public class SiVaCGraph extends ImmutableGraph {
 		BufferedWriter bwD = new BufferedWriter(new FileWriter(tempD.getAbsoluteFile()));
 		String line;
 		while ((line = br.readLine()) != null) {
+			this.edges++;
 			String[] temp = line.split("\\s+");
 			int a = Integer.parseInt(temp[0]);
 			int b = Integer.parseInt(temp[1]);
@@ -335,8 +346,7 @@ public class SiVaCGraph extends ImmutableGraph {
 
 	public boolean isSuccessor(int a, int b) {
 		if (SiVaCUtils.isDiagonal(a, b, D)) {
-			if(checkCompressedDiagonal(a, b , D, bits, compressedDiagonal))
-			{
+			if (checkCompressedDiagonal(a, b, D, bits, compressedDiagonal)) {
 				return true;
 			}
 		}
@@ -351,13 +361,13 @@ public class SiVaCGraph extends ImmutableGraph {
 	private boolean checkCompressedDiagonal(int a, int b, int D, int bits, byte[] compressedDiagonal) {
 		char[] chars = new char[bits];
 		int pos = a * bits;
-		for(int i=0;i<bits;i++)
-		{
-			chars[i] = (isSet(compressedDiagonal[pos/8], pos%8)) ? '1' : '0';
+		for (int i = 0; i < bits; i++) {
+			chars[i] = (isSet(compressedDiagonal[pos / 8], pos % 8)) ? '1' : '0';
 			pos++;
 		}
-//		System.out.println(new String(chars)+" "+(String)map.getKey(new String(chars))+" "+b+" "+a+" "+D);
-		return ((String)map.getKey(new String(chars))).toCharArray()[b-a+D]=='1';
+		// System.out.println(new String(chars)+" "+(String)map.getKey(new
+		// String(chars))+" "+b+" "+a+" "+D);
+		return ((String) map.getKey(new String(chars))).toCharArray()[b - a + D] == '1';
 	}
 
 	public LazyIntIterator getSuccessors(int a) {
@@ -377,11 +387,23 @@ public class SiVaCGraph extends ImmutableGraph {
 		br.close();
 	}
 
+	private void printBitsPerEdge(String basename) {
+		double size = new File(basename + "." + SiVaC_EXTENSION).length() + new File(basename + ".graph").length() + new File(basename + ".offsets").length()
+				+ new File(basename + ".properties").length();
+		System.out.println("BitsPerEdge: " + size * 8 / this.edges);
+	}
+
 	public static void main(String[] args) throws NumberFormatException, IOException {
-		SiVaCGraph a = SiVaCGraph.createAndLoad(new File("/var/www/graphs/cnr-2000/cnr-2000-zero.txt"), 3, 3, "test");
-		a.checkAllEdges(new FileInputStream(new File("/var/www/graphs/cnr-2000/cnr-2000-zero.txt")));
+		SiVaCGraph a;
+		for (int i = 3; i < 10; i++) {
+			a = SiVaCGraph.createAndLoad(new File("/var/www/graphs/amazon-2008/amazon-2008.txt"), i, 5, "test");
+			a.printBitsPerEdge("test");
+		}
+		// a.checkAllEdges(new FileInputStream(new
+		// File("/var/www/graphs/cnr-2000/cnr-2000-zero.txt")));
 		// a.getSuccessors(5);
-		System.out.println(a.getSuccessors(318).nextInt());
+		// System.out.println(a.getSuccessors(318).nextInt());
+
 	}
 
 }

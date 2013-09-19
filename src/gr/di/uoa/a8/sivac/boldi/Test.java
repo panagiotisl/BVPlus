@@ -45,7 +45,7 @@ public class Test {
 //		ImmutableGraph ig  = ArcListASCIIGraph.loadOnce(new FileInputStream(new File("dblp2010.txt.noD1")));
 //		ImmutableGraph.store(BVGraph.class, ig, "dblp2010.noD1.graph");
 		
-		ImmutableGraph ig  = ArcListASCIIGraph.loadOnce(new FileInputStream(new File("/tmp/paok.txt")));
+		ImmutableGraph ig  = ArcListASCIIGraph.loadOnce(new FileInputStream(new File("/var/www/graphs/eu2005/eu2005-zero.txt")));
 		ImmutableGraph.store(BVGraph.class, ig, "/tmp/example");
 	}
 
