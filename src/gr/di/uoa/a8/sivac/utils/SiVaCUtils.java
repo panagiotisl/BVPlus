@@ -5,10 +5,141 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.apache.commons.collections.BidiMap;
+import org.apache.commons.collections.bidimap.DualHashBidiMap;
+import org.apache.commons.lang.StringUtils;
 
 public class SiVaCUtils {
 
+	
+	/** get position in file from node pair */
+	public static int getSerialization(int a, int b, int size, int D) {
+		// check if input is valid
+		if ((a > b + D || a < b - D) || (a < 0 || b < 0) || a >= size || b >= size)
+			throw new IllegalArgumentException("not a valid node pair: (" + a + ", " + b + ")");
+		// calculate position
+		int no = a * (2 * D + 1) + b + D - a;
+		int temp = D;
+		// remove missing from beginning
+		for (int i = 0; i < D; i++) {
+			if (a >= i) {
+				no -= temp;
+				temp--;
+			}
+		}
+		temp = 1;
+		// remove missing from end
+		for (int i = size + 1 - D; i < size; i++) {
+			if (a >= i) {
+				no -= temp;
+				temp++;
+			}
+		}
+		return no;
+	}
+
+	// tests if bit is set in a byte
+	public static boolean isSet(byte my_byte, int pos) {
+		if (pos > 7 || pos < 0)
+			throw new IllegalArgumentException("not a valid bit position: " + pos);
+		return (my_byte & (1 << pos)) != 0;
+	}
+
+	// set a bit in a byte
+	public static byte set_bit(byte my_byte, int pos) {
+		if (pos > 7 || pos < 0)
+			throw new IllegalArgumentException("not a valid bit position: " + pos);
+		return (byte) (my_byte | (1 << pos));
+	}
+
+	// unset a bit in a byte
+	public static byte unset_bit(byte my_byte, int pos) {
+		if (pos > 7 || pos < 0)
+			throw new IllegalArgumentException("not a valid bit position: " + pos);
+		return (byte) (my_byte & ~(1 << pos));
+	}
+
+	public static BidiMap calculateFrequencies(byte[] array, int size, int D, int bits) throws NumberFormatException, IOException {
+		Map<String, Integer> freqsX = new HashMap<String, Integer>();
+		ValueComparator bvc = new ValueComparator(freqsX);
+		TreeMap<String, Integer> sorted_map = new TreeMap<String, Integer>(bvc);
+		for (int i = 0; i < size; i++) {
+			String number = "";
+			int count = 0;
+			for (int j = i - D; j < i + D + 1; j++) {
+				try {
+					int no = SiVaCUtils.getSerialization(i, j, size, D);
+					if (SiVaCUtils.isSet(array[no / 8], no % 8)) {
+						number += "1";
+						count++;
+					} else {
+						number += "0";
+					}
+
+				} catch (Exception e) {
+					number += "0";
+				}
+
+			}
+			if (!freqsX.containsKey(number)) {
+				freqsX.put(number, count);
+			}
+
+			else {
+				freqsX.put(number, freqsX.get(number) + count);
+			}
+
+		}
+		sorted_map.putAll(freqsX);
+		Object[] keys = sorted_map.keySet().toArray();
+		BidiMap map = new DualHashBidiMap();
+		char[] chars = new char[bits];
+		Arrays.fill(chars, '0');
+		char[] morechars = new char[(2*D+1)];
+		Arrays.fill(morechars, '0');
+		map.put(new String(morechars), new String(chars));
+		for(int i=0;i<((int) Math.pow(2, bits) - 1)&&i<keys.length; i++)
+		{
+			try
+			{
+				map.put((String)keys[i], padLeft(Integer.toBinaryString(i+1), bits));
+			}catch(ArrayIndexOutOfBoundsException e)
+			{
+				System.err.println("Not enough values with such a small diagonal "+D+" "+bits);
+			}
+		}
+		return map;
+	}
+	
+	public static String padLeft(String s, int n) {
+		return StringUtils.leftPad(s, n, "0");
+	}
+	
+	private static class ValueComparator implements Comparator<String> {
+
+		Map<String, Integer> base;
+
+		public ValueComparator(Map<String, Integer> base) {
+			this.base = base;
+		}
+
+		@Override
+		public int compare(String a, String b) {
+			if (base.get(a) >= base.get(b)) {
+				return -1;
+			} else {
+				return 1;
+			} // returning 0 would merge keys
+		}
+	}
+	
 	public static float percentageInDiagonal(String filename, int D)
 	{
 		String line;

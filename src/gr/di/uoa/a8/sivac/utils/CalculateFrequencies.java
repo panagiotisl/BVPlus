@@ -1,6 +1,5 @@
 package gr.di.uoa.a8.sivac.utils;
 
-import gr.di.uoa.a8.sivac.SiVaCGraph;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,63 +7,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.commons.collections.BidiMap;
-import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import org.apache.commons.lang.StringUtils;
 
 public class CalculateFrequencies {
 
-	public static BidiMap calculateFrequencies(byte[] array, int size, int D, int bits) throws NumberFormatException, IOException {
-		Map<String, Integer> freqsX = new HashMap<String, Integer>();
-		ValueComparator bvc = new ValueComparator(freqsX);
-		TreeMap<String, Integer> sorted_map = new TreeMap<String, Integer>(bvc);
-		for (int i = 0; i < size; i++) {
-			String number = "";
-			int count = 0;
-			for (int j = i - D; j < i + D + 1; j++) {
-				try {
-					int no = SiVaCGraph.getSerialization(i, j, size, D);
-					if (SiVaCGraph.isSet(array[no / 8], no % 8)) {
-						number += "1";
-						count++;
-					} else {
-						number += "0";
-					}
-
-				} catch (Exception e) {
-					number += "0";
-				}
-
-			}
-			if (!freqsX.containsKey(number)) {
-				freqsX.put(number, count);
-			}
-
-			else {
-				freqsX.put(number, freqsX.get(number) + count);
-			}
-
-		}
-		sorted_map.putAll(freqsX);
-		Object[] keys = sorted_map.keySet().toArray();
-		BidiMap map = new DualHashBidiMap();
-		char[] chars = new char[bits];
-		Arrays.fill(chars, '0');
-		char[] morechars = new char[(2*D+1)];
-		Arrays.fill(morechars, '0');
-		map.put(new String(morechars), new String(chars));
-		for(int i=0;i<((int) Math.pow(2, bits) - 1); i++)
-		{
-			map.put((String)keys[i], padLeft(Integer.toBinaryString(i+1), bits));
-		}
-		return map;
-	}
 
 	private static void calculateFrequencies(File file, int D) throws NumberFormatException, IOException {
 
@@ -88,16 +39,16 @@ public class CalculateFrequencies {
 		System.out.println("Size: " + size);
 		br.close();
 		br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-		int largest = SiVaCGraph.getSerialization(size - 1, size - 1, size, D);
+		int largest = SiVaCUtils.getSerialization(size - 1, size - 1, size, D);
 		byte[] array = new byte[largest / 8 + (largest % 8 != 0 ? 1 : 0)];
 		while ((line = br.readLine()) != null) {
 			String[] temp = line.split("\\s+");
 			int a = Integer.parseInt(temp[0]);
 			int b = Integer.parseInt(temp[1]);
 			if (SiVaCUtils.isDiagonal(a, b, D)) {
-				int no = SiVaCGraph.getSerialization(a, b, size, D);
+				int no = SiVaCUtils.getSerialization(a, b, size, D);
 				try {
-					array[no / 8] = SiVaCGraph.set_bit(array[no / 8], no % 8);
+					array[no / 8] = SiVaCUtils.set_bit(array[no / 8], no % 8);
 				} catch (Exception e) {
 					System.err.println(no / 8 + " " + array.length);
 				}
@@ -110,8 +61,8 @@ public class CalculateFrequencies {
 			int count = 0;
 			for (int j = i - D; j < i + D + 1; j++) {
 				try {
-					int no = SiVaCGraph.getSerialization(i, j, size, D);
-					if (SiVaCGraph.isSet(array[no / 8], no % 8)) {
+					int no = SiVaCUtils.getSerialization(i, j, size, D);
+					if (SiVaCUtils.isSet(array[no / 8], no % 8)) {
 						number += "1";
 						count++;
 					} else {

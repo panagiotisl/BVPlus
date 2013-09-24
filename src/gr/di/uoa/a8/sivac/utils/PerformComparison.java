@@ -89,7 +89,8 @@ public class PerformComparison {
 		System.out.println("Boldi: "+(sizes.get(0)*8/(float)edges));
 		for(int i=1;i<=iterations;i++)
 		{
-			System.out.println(i+": "+((sizes.get(i)*8 + size*(undirected ? 1 : 2)*i+(social ? 0 : 1))/(float)edges)+" ("+((sizes.get(i)*8)/(float)edges)+")");
+			System.out.println(i+": "+((sizes.get(i)*8 + size*((undirected ? 1 : 2)*i+(social ? 0 : 1)))/(float)edges)+" ("+((sizes.get(i)*8)/(float)edges)+")");
+			System.out.println((size*((undirected ? 1 : 2)*i+(social ? 0 : 1))));
 		}
 	}
 
