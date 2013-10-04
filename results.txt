@@ -67,6 +67,12 @@ To bits/edge είναι η συμπίεση του κομματιού της δ�
 9: bits/edge: 3.637524	N: 1139906
 10: bits/edge: 3.8431535	N: 1139906
 
+/var/www/graphs/hollywood-2009/hollywood-2009-zero-directed.txt
+1: In Diagonal: 1667614 Total: 112751422 Percentage: 1.4790182
+2: In Diagonal: 3027824 Total: 112751422 Percentage: 2.6853976
+3: In Diagonal: 4192140 Total: 112751422 Percentage: 3.7180374
+4: In Diagonal: 5213154 Total: 112751422 Percentage: 4.6235814
+
 /var/www/graphs/cnr-2000/cnr-2000.txt
 1: In Diagonal: 252040 Total: 3216152 Percentage: 7.836694     bits/edge: 3.8750634
 2: In Diagonal: 351664 Total: 3216152 Percentage: 10.934309     bits/edge: 4.6288075
