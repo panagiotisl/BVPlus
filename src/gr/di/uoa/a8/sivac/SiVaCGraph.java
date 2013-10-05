@@ -9,6 +9,11 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.collections.BidiMap;
 
@@ -18,6 +23,7 @@ import gr.di.uoa.a8.sivac.utils.SiVaCUtils;
 import it.unimi.dsi.webgraph.ArcListASCIIGraph;
 import it.unimi.dsi.webgraph.BVGraph;
 import it.unimi.dsi.webgraph.ImmutableGraph;
+import it.unimi.dsi.webgraph.LazyIntIterator;
 
 public class SiVaCGraph extends ImmutableGraph {
 
@@ -464,6 +470,61 @@ public class SiVaCGraph extends ImmutableGraph {
 		return false;
 	}
 
+	
+	private long isSuccessorTime(int a, int b) {
+	    // if the edge is in the diagonal, check the compressed diagonal first
+	    // and return true if the edge is present
+		long startTime = System.nanoTime();
+		if (SiVaCUtils.isDiagonal(a, b, D)) {
+			if(checkCompressedDiagonal(a, b))
+			{
+				long endTime = System.nanoTime();
+				return endTime - startTime;
+			}
+		}
+		startTime = System.nanoTime();
+		// if the edge was not found, check the rest of the graph
+//		int[] temp = this.ig.successorArray(a);
+		LazyIntIterator temp = this.ig.successors(a);
+		int suc;
+		while((suc=temp.nextInt())!=-1)
+		{
+			if (suc == b)
+			{
+				long endTime = System.nanoTime();
+				return -(endTime - startTime);
+			}
+		}
+//		for (int suc : temp) {
+//			if (suc == b)
+//			{
+//				long endTime = System.nanoTime();
+//				return -(endTime - startTime);
+//			}
+//		}
+		return 0;
+	}
+	
+	
+	private List<Integer> checkCompressedDiagonal(int a) {
+		List<Integer> list = new ArrayList<Integer>();
+		char[] chars = new char[bits];
+		int pos = a * bits;
+		for(int i=0;i<bits;i++)
+		{
+			chars[i] = (SiVaCUtils.isSet(compressedDiagonal[pos/8], pos%8)) ? '1' : '0';
+			pos++;
+		}
+		chars = ((String)map.getKey(new String(chars))).toCharArray();
+		for(int i=0;i<2*D+1;i++)
+		{
+			if(chars[i] == '1')
+				list.add(a-D+i);
+		}
+		return list;
+	}
+	
+	
     /**
      Function that constructs the uncompressed diagonal of a node from the compressed
      representation and then checks if the bit that stands for the edge in question
@@ -493,16 +554,56 @@ public class SiVaCGraph extends ImmutableGraph {
    @input fis a {@link FileInputStream}
 */
 	public void checkAllEdges(FileInputStream fis) throws NumberFormatException, IOException {
+		Set<Integer> set = new HashSet<Integer>();
 		BufferedReader br = new BufferedReader(new InputStreamReader(fis));
 		String line;
+		long bvTime = 0, SiVaCTime = 0;
+		int bv = 0, SiVaC = 0;
 		while ((line = br.readLine()) != null) {
 			String[] temp = line.split("\\s+");
 			int a = Integer.parseInt(temp[0]);
 			int b = Integer.parseInt(temp[1]);
-			if (!this.isSuccessor(a, b))
+			set.add(a);
+			set.add(b);
+			long res = this.isSuccessorTime(a, b);
+			if(res == 0)
 				throw new RuntimeException("Edge not found " + a + " " + b);
+			else if (res < 0)
+			{
+				bv++;
+				bvTime+=-res;
+			}
+			else
+			{
+				SiVaC++;
+				SiVaCTime+=res;
+			}
+//			if (!this.isSuccessor(a, b))
+//				throw new RuntimeException("Edge not found " + a + " " + b);
 		}
 		br.close();
+		long bvTimeSuc = 0, SiVaCTimeSuc = 0, startTime, endTime;
+		Iterator<Integer> it = set.iterator();
+		while(it.hasNext())
+		{
+			try
+			{
+				Integer temp = it.next();
+				startTime = System.nanoTime();
+				this.ig.successorArray(temp);
+				endTime = System.nanoTime();
+				bvTimeSuc += endTime - startTime;
+				startTime = System.nanoTime();
+				this.checkCompressedDiagonal(temp);
+				endTime = System.nanoTime();
+				SiVaCTimeSuc += endTime - startTime;	
+			}catch(Exception e){}
+		}
+		
+		System.out.println("BV:\t"+bvTime+" "+bv+"\nSiVaC\t"+SiVaCTime+" "+SiVaC);
+		System.out.println("BV:\t"+bvTime/bv+"\nSiVaC:\t"+SiVaCTime/SiVaC);
+		
+		System.out.println("BVS:\t"+bvTimeSuc/set.size()+"\nSiVaC:S\t"+SiVaCTimeSuc/set.size());
 	}
 
 	public void printBitsPerEdge()
@@ -537,13 +638,13 @@ public class SiVaCGraph extends ImmutableGraph {
 	
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		SiVaCGraph a = null;
-		for(int i=5;i<25;i++)
+		for(int i=18;i<25;i++)
 		{
-			a = SiVaCGraph.createAndLoad(new File("/var/www/graphs/road/roadNet-CA.txt"), i, 5, "test");
+			a = SiVaCGraph.createAndLoad(new File("/var/www/graphs/hollywood-2009/hollywood-2009-zero-directed.txt"), i, 9, "test");
 			a.printBitsPerEdge();
 		}
 //		a = SiVaCGraph.load(5, 5, "test");
-		a.checkAllEdges(new FileInputStream(new File("/var/www/graphs/road/roadNet-CA.txt")));
+//		a.checkAllEdges(new FileInputStream(new File("/var/www/graphs/dblp2010-directed/dblp2010-zero-directed-sorted.txt")));
 		// a.getSuccessors(5);
 		//System.out.println(a.getSuccessors(318).nextInt());
 		
