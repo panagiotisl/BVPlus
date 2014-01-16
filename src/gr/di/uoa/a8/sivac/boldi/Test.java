@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import gr.di.uoa.a8.sivac.utils.SiVaCUtils;
 import it.unimi.dsi.webgraph.ArcListASCIIGraph;
 import it.unimi.dsi.webgraph.BVGraph;
 import it.unimi.dsi.webgraph.ImmutableGraph;
+import it.unimi.dsi.webgraph.LazyIntIterator;
+import it.unimi.dsi.webgraph.NodeIterator;
 
 
 public class Test {
@@ -45,8 +48,36 @@ public class Test {
 //		ImmutableGraph ig  = ArcListASCIIGraph.loadOnce(new FileInputStream(new File("dblp2010.txt.noD1")));
 //		ImmutableGraph.store(BVGraph.class, ig, "dblp2010.noD1.graph");
 		
-		ImmutableGraph ig  = ArcListASCIIGraph.loadOnce(new FileInputStream(new File("/var/www/graphs/eu2005/eu2005-zero.txt")));
-		ImmutableGraph.store(BVGraph.class, ig, "/tmp/example");
+//		ImmutableGraph ig  = ArcListASCIIGraph.loadOnce(new FileInputStream(new File("/var/www/graphs/eu2005/eu2005-zero.txt")));
+//		ImmutableGraph.store(BVGraph.class, ig, "/tmp/example");
+		
+		ImmutableGraph ig = BVGraph.load(args[0]);
+		
+		NodeIterator it = ig.nodeIterator();
+		int D = 0,total=0,in=0;
+		if(args.length>1)
+			D = Integer.parseInt(args[1]);
+		while(it.hasNext())
+		{
+			Integer node = it.next();
+			LazyIntIterator its = ig.successors(node);
+			int suc;
+			while((suc = its.nextInt()) !=-1)
+			{
+				if(args.length==1)
+					System.out.println(node+"\t"+suc);
+				else
+				{
+					if(SiVaCUtils.isDiagonal(node, suc, D))
+					{
+						in++;
+					}
+					total++;
+				}
+			}
+		}
+		if(args.length>1)
+			System.out.println(D+": In Diagonal: "+in+" Total: "+total+" Percentage: "+(float)100*in/total);
 	}
 
 }

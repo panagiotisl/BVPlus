@@ -601,9 +601,9 @@ public class SiVaCGraph extends ImmutableGraph {
 		}
 		
 		System.out.println("BV:\t"+bvTime+" "+bv+"\nSiVaC\t"+SiVaCTime+" "+SiVaC);
-		System.out.println("BV:\t"+bvTime/bv+"\nSiVaC:\t"+SiVaCTime/SiVaC);
+		System.out.println("BV:\t"+bvTime/bv);
 		
-		System.out.println("BVS:\t"+bvTimeSuc/set.size()+"\nSiVaC:S\t"+SiVaCTimeSuc/set.size());
+		System.out.println("BVS:\t"+bvTimeSuc/set.size());
 	}
 
 	public void printBitsPerEdge()
@@ -638,13 +638,21 @@ public class SiVaCGraph extends ImmutableGraph {
 	
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		SiVaCGraph a = null;
-		for(int i=18;i<25;i++)
+		for(int i=1;i<500;i++)
 		{
-			a = SiVaCGraph.createAndLoad(new File("/var/www/graphs/hollywood-2009/hollywood-2009-zero-directed.txt"), i, 9, "test");
-			a.printBitsPerEdge();
+//			System.out.println(i);
+			try
+			{
+				a = SiVaCGraph.createAndLoad(new File("/home/panagiotis/ecirTests/web-Stanford.llp.txt"), i, 1, "test");
+				a.printBitsPerEdge();	
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			
 		}
 //		a = SiVaCGraph.load(5, 5, "test");
-//		a.checkAllEdges(new FileInputStream(new File("/var/www/graphs/dblp2010-directed/dblp2010-zero-directed-sorted.txt")));
+//		a.checkAllEdges(new FileInputStream(new File(args[0])));
 		// a.getSuccessors(5);
 		//System.out.println(a.getSuccessors(318).nextInt());
 		
