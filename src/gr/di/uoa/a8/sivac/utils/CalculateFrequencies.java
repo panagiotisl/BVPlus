@@ -7,9 +7,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
@@ -91,6 +94,26 @@ public class CalculateFrequencies {
 		// code for adaptive dictionary
 		sorted_map.putAll(freqsX);
 		System.out.println(D + ": " + sorted_map);
+		
+		Collection<Integer> map_values = sorted_map.values();
+		String powerLaw = "{";
+		int count=1;
+		for(int value : map_values)
+		{
+			powerLaw += "{"+count+","+value+"}, ";
+			count++;
+		}
+		powerLaw = powerLaw.substring(0, powerLaw.length()-2)+"}";
+		System.out.println("PowerLaw: "+powerLaw);
+		
+		Set<Entry<String, Integer>> set = sorted_map.entrySet();
+		String powerLaw2 = "{";
+		for(Entry<String, Integer> entry : set)
+			powerLaw2 += "{"+Integer.parseInt(entry.getKey(), 2)+","+entry.getValue()+"}, ";
+		powerLaw2 = powerLaw2.substring(0, powerLaw2.length()-2)+"}";
+		System.out.println("PowerLaw: "+powerLaw2);
+		
+		
 		Object[] keys = sorted_map.keySet().toArray();
 		for (int bits = 2; bits <= D; bits++) {
 			int pv = freqs.size();

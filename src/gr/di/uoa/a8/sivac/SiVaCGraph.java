@@ -128,7 +128,7 @@ public class SiVaCGraph extends ImmutableGraph {
 			// remove the file, store the graph as a BVGraph
 			// and load it into memory
 			this.ig = ArcListASCIIGraph.loadOnce(new FileInputStream(tempNoD));
-			this.tempNoD.delete();
+//			this.tempNoD.delete();
 			this.storeNonDiagonal();
 			this.ig = BVGraph.load(this.basename);
 			
@@ -189,7 +189,7 @@ public class SiVaCGraph extends ImmutableGraph {
 	private boolean createTempFiles() throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(input)));
 		// create temporary files to insert the edges of the graph
-	    	tempD = File.createTempFile("diagonal", ".txt");
+	    tempD = File.createTempFile("diagonal", ".txt");
 		tempNoD = File.createTempFile("non-diagonal", ".txt");
 		// start reading the original file
 		BufferedWriter bwD = new BufferedWriter(new FileWriter(tempD.getAbsoluteFile()));
@@ -638,12 +638,12 @@ public class SiVaCGraph extends ImmutableGraph {
 	
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		SiVaCGraph a = null;
-		for(int i=1;i<500;i++)
+		for(int i=5;i<25;i++)
 		{
 //			System.out.println(i);
 			try
 			{
-				a = SiVaCGraph.createAndLoad(new File("/home/panagiotis/ecirTests/web-Stanford.llp.txt"), i, 1, "test");
+				a = SiVaCGraph.createAndLoad(new File("/home/panagiotis/ecirTests/cit-HepPh.llp.txt"), i, 9, "test");
 				a.printBitsPerEdge();	
 			}catch(Exception e)
 			{
