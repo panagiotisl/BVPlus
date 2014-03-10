@@ -582,7 +582,7 @@ public class BVPlusGraph extends ImmutableGraph {
 //				throw new RuntimeException("Edge not found " + a + " " + b);
 		}
 		br.close();
-		long bvTimeSuc = 0, SiVaCTimeSuc = 0, startTime, endTime;
+		long bvTimeSuc = 0, /*SiVaCTimeSuc = 0,*/ startTime, endTime;
 		Iterator<Integer> it = set.iterator();
 		while(it.hasNext())
 		{
@@ -596,7 +596,7 @@ public class BVPlusGraph extends ImmutableGraph {
 				startTime = System.nanoTime();
 				this.checkCompressedDiagonal(temp);
 				endTime = System.nanoTime();
-				SiVaCTimeSuc += endTime - startTime;	
+//				SiVaCTimeSuc += endTime - startTime;	
 			}catch(Exception e){}
 		}
 		
