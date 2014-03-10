@@ -30,5 +30,6 @@
 	<classpathentry kind="lib" path="lib/sux4j-3.0.6.jar"/>
 	<classpathentry kind="lib" path="lib/webgraph-3.0.9.jar"/>
 	<classpathentry kind="lib" path="lib/wstx-asl-3.2.6.jar"/>
+	<classpathentry kind="lib" path="lib/law-2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
