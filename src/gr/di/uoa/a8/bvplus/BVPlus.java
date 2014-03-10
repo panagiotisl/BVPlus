@@ -1,4 +1,4 @@
-package gr.di.uoa.a8.sivac;
+package gr.di.uoa.a8.bvplus;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class SiVaC {
+public class BVPlus {
 
 	private static final int D = 4;
 

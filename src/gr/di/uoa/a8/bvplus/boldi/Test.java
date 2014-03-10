@@ -1,10 +1,10 @@
-package gr.di.uoa.a8.sivac.boldi;
+package gr.di.uoa.a8.bvplus.boldi;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import gr.di.uoa.a8.sivac.utils.SiVaCUtils;
+import gr.di.uoa.a8.bvplus.utils.BVPlusUtils;
 import it.unimi.dsi.webgraph.ArcListASCIIGraph;
 import it.unimi.dsi.webgraph.BVGraph;
 import it.unimi.dsi.webgraph.ImmutableGraph;
@@ -68,7 +68,7 @@ public class Test {
 					System.out.println(node+"\t"+suc);
 				else
 				{
-					if(SiVaCUtils.isDiagonal(node, suc, D))
+					if(BVPlusUtils.isDiagonal(node, suc, D))
 					{
 						in++;
 					}

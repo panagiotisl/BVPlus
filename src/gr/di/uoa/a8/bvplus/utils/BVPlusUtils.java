@@ -1,4 +1,4 @@
-package gr.di.uoa.a8.sivac.utils;
+package gr.di.uoa.a8.bvplus.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,7 +16,7 @@ import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
 import org.apache.commons.lang.StringUtils;
 
-public class SiVaCUtils {
+public class BVPlusUtils {
 
 	
 	/** get position in file from node pair */
@@ -75,8 +75,8 @@ public class SiVaCUtils {
 			int count = 0;
 			for (int j = i - D; j < i + D + 1; j++) {
 				try {
-					int no = SiVaCUtils.getSerialization(i, j, size, D);
-					if (SiVaCUtils.isSet(array[no / 8], no % 8)) {
+					int no = BVPlusUtils.getSerialization(i, j, size, D);
+					if (BVPlusUtils.isSet(array[no / 8], no % 8)) {
 						number += "1";
 						count++;
 					} else {

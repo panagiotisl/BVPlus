@@ -1,4 +1,4 @@
-package gr.di.uoa.a8.sivac.k2;
+package gr.di.uoa.a8.bvplus.k2;
 
 import java.io.BufferedReader;
 import java.io.File;

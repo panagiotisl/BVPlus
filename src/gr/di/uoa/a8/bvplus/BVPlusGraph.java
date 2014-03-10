@@ -1,4 +1,4 @@
-package gr.di.uoa.a8.sivac;
+package gr.di.uoa.a8.bvplus;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -19,13 +19,13 @@ import org.apache.commons.collections.BidiMap;
 
 import com.google.common.io.Files;
 
-import gr.di.uoa.a8.sivac.utils.SiVaCUtils;
+import gr.di.uoa.a8.bvplus.utils.BVPlusUtils;
 import it.unimi.dsi.webgraph.ArcListASCIIGraph;
 import it.unimi.dsi.webgraph.BVGraph;
 import it.unimi.dsi.webgraph.ImmutableGraph;
 import it.unimi.dsi.webgraph.LazyIntIterator;
 
-public class SiVaCGraph extends ImmutableGraph {
+public class BVPlusGraph extends ImmutableGraph {
 
 	/**
 	 *  Extension for the file holding the compressed diagonal 
@@ -103,7 +103,7 @@ public class SiVaCGraph extends ImmutableGraph {
 
 
 	
-	public SiVaCGraph(File input, int D, int bits, String basename){
+	public BVPlusGraph(File input, int D, int bits, String basename){
 		// initializing variables
 		this.input = input;
 		this.D = D;
@@ -119,7 +119,7 @@ public class SiVaCGraph extends ImmutableGraph {
 			// create the map with the compressed representations
 			// fill the byte representation of the compressed diagonal and
 			// release the memory of the byte representation of the diagonal
-			this.map = SiVaCUtils.calculateFrequencies(this.diagonal, this.nodes, this.D, this.bits);
+			this.map = BVPlusUtils.calculateFrequencies(this.diagonal, this.nodes, this.D, this.bits);
 			this.createCompressedDiagonal();
 			this.diagonal = null;
 			// store the compressed diagonal 
@@ -139,7 +139,7 @@ public class SiVaCGraph extends ImmutableGraph {
 	}
 	
 	
-	public SiVaCGraph(int D, int bits, String basename) {
+	public BVPlusGraph(int D, int bits, String basename) {
 		this.input = null;
 		this.D = D;  // TODO import
 		this.bits = bits;  // TODO import
@@ -158,24 +158,24 @@ public class SiVaCGraph extends ImmutableGraph {
 
 
 	/**
-	 * Uses an arc list file to create a {@link SiVaCGraph} instance
+	 * Uses an arc list file to create a {@link BVPlusGraph} instance
 	 * and load it into memory
 	 * 
 	 * @param file The input arc list file
 	 * @param D The desired size of the diagonal
 	 * @param bits The desired number of bits of the compressed diagonal
 	 * @param basename The base name for the stored graph files
-	 * @return The newly created {@link SiVaCGraph} instance 
+	 * @return The newly created {@link BVPlusGraph} instance 
 	 * */
-	public static SiVaCGraph createAndLoad(File file, int D, int bits, String basename) {
-		SiVaCGraph sg = new SiVaCGraph(file, D, bits, basename);
+	public static BVPlusGraph createAndLoad(File file, int D, int bits, String basename) {
+		BVPlusGraph sg = new BVPlusGraph(file, D, bits, basename);
 		return sg;
 	}
 	
 	
-	public static SiVaCGraph load(int D, int bits, String basename)
+	public static BVPlusGraph load(int D, int bits, String basename)
 	{
-		SiVaCGraph sg = new SiVaCGraph(D, bits, basename);
+		BVPlusGraph sg = new BVPlusGraph(D, bits, basename);
 		return sg;
 	}
 
@@ -207,7 +207,7 @@ public class SiVaCGraph extends ImmutableGraph {
 			if (b >= this.nodes)
 				this.nodes = b + 1;
 			// write to the diagonal temporary file
-			if (SiVaCUtils.isDiagonal(a, b, D)) {
+			if (BVPlusUtils.isDiagonal(a, b, D)) {
 				// in the diagonal
 				bwD.write(line + '\n');
 			}
@@ -228,7 +228,7 @@ public class SiVaCGraph extends ImmutableGraph {
 		// is +1 really needed?
 
 	    // calculate the largest possible serialized position in the diagonal and allocate this much space
-		int largest = SiVaCUtils.getSerialization(nodes - 1, nodes - 1, nodes, D)+1;
+		int largest = BVPlusUtils.getSerialization(nodes - 1, nodes - 1, nodes, D)+1;
 		diagonal = new byte[largest / 8 + (largest % 8 != 0 ? 1 : 0)];
 		String line;
 		try {
@@ -240,9 +240,9 @@ public class SiVaCGraph extends ImmutableGraph {
 				int a = Integer.parseInt(temp[0]);
 				int b = Integer.parseInt(temp[1]);
 				// find the position in the diagonal
-				int no = SiVaCUtils.getSerialization(a, b, nodes, D);
+				int no = BVPlusUtils.getSerialization(a, b, nodes, D);
 				// set the corresponding bit to 1
-				diagonal[no / 8] = SiVaCUtils.set_bit(diagonal[no / 8], no % 8);
+				diagonal[no / 8] = BVPlusUtils.set_bit(diagonal[no / 8], no % 8);
 			}
 			br.close();
 		} catch (IOException e) {
@@ -279,8 +279,8 @@ public class SiVaCGraph extends ImmutableGraph {
 			String number = "";
 			for (int j = i - D; j < i + D + 1; j++) {
 				try {
-					int no = SiVaCUtils.getSerialization(i, j, nodes, D);
-					if (SiVaCUtils.isSet(diagonal[no / 8], no % 8)) {
+					int no = BVPlusUtils.getSerialization(i, j, nodes, D);
+					if (BVPlusUtils.isSet(diagonal[no / 8], no % 8)) {
 						number += "1";
 					} else {
 						number += "0";
@@ -329,7 +329,7 @@ public class SiVaCGraph extends ImmutableGraph {
 			String representation = "";
 			for(Object key : map.keySet())
 			{
-				temp2 = SiVaCUtils.subset((String) key, number);
+				temp2 = BVPlusUtils.subset((String) key, number);
 				if (temp2 > temp) {
 					temp = temp2;
 					representation = (String) key;
@@ -371,7 +371,7 @@ public class SiVaCGraph extends ImmutableGraph {
 			int a = Integer.parseInt(temp[0]);
 			int b = Integer.parseInt(temp[1]);
 			// if it's not in the diagonal add it to the file
-			if (!SiVaCUtils.isDiagonal(a, b, D)) {
+			if (!BVPlusUtils.isDiagonal(a, b, D)) {
 				bwNoD.write(line + '\n');
 			}
 			// if the edges of node have been reached break
@@ -397,7 +397,7 @@ public class SiVaCGraph extends ImmutableGraph {
 		for (int i = 0; i < chars.length; i++) {
 			if (chars[i] == '1')
 			{
-				compressedDiagonal[(pos / 8)] = SiVaCUtils.set_bit(compressedDiagonal[(pos / 8)], pos % 8);
+				compressedDiagonal[(pos / 8)] = BVPlusUtils.set_bit(compressedDiagonal[(pos / 8)], pos % 8);
 			}
 			pos++;
 		}
@@ -455,7 +455,7 @@ public class SiVaCGraph extends ImmutableGraph {
 	public boolean isSuccessor(int a, int b) {
 	    // if the edge is in the diagonal, check the compressed diagonal first
 	    // and return true if the edge is present
-		if (SiVaCUtils.isDiagonal(a, b, D)) {
+		if (BVPlusUtils.isDiagonal(a, b, D)) {
 			if(checkCompressedDiagonal(a, b))
 			{
 				return true;
@@ -475,7 +475,7 @@ public class SiVaCGraph extends ImmutableGraph {
 	    // if the edge is in the diagonal, check the compressed diagonal first
 	    // and return true if the edge is present
 		long startTime = System.nanoTime();
-		if (SiVaCUtils.isDiagonal(a, b, D)) {
+		if (BVPlusUtils.isDiagonal(a, b, D)) {
 			if(checkCompressedDiagonal(a, b))
 			{
 				long endTime = System.nanoTime();
@@ -512,7 +512,7 @@ public class SiVaCGraph extends ImmutableGraph {
 		int pos = a * bits;
 		for(int i=0;i<bits;i++)
 		{
-			chars[i] = (SiVaCUtils.isSet(compressedDiagonal[pos/8], pos%8)) ? '1' : '0';
+			chars[i] = (BVPlusUtils.isSet(compressedDiagonal[pos/8], pos%8)) ? '1' : '0';
 			pos++;
 		}
 		chars = ((String)map.getKey(new String(chars))).toCharArray();
@@ -538,7 +538,7 @@ public class SiVaCGraph extends ImmutableGraph {
 		int pos = a * bits;
 		for(int i=0;i<bits;i++)
 		{
-			chars[i] = (SiVaCUtils.isSet(compressedDiagonal[pos/8], pos%8)) ? '1' : '0';
+			chars[i] = (BVPlusUtils.isSet(compressedDiagonal[pos/8], pos%8)) ? '1' : '0';
 			pos++;
 		}
 		return ((String)map.getKey(new String(chars))).toCharArray()[b-a+D]=='1';
@@ -637,17 +637,20 @@ public class SiVaCGraph extends ImmutableGraph {
 	}
 	
 	public static void main(String[] args) throws NumberFormatException, IOException {
-		SiVaCGraph a = null;
-		for(int i=5;i<25;i++)
+		BVPlusGraph a = null;
+		for(int i=1;i<10;i++)
 		{
-//			System.out.println(i);
-			try
+			for(int j=1;j<2*i;j++)
 			{
-				a = SiVaCGraph.createAndLoad(new File("/home/panagiotis/ecirTests/cit-HepPh.llp.txt"), i, 9, "test");
-				a.printBitsPerEdge();	
-			}catch(Exception e)
-			{
-				e.printStackTrace();
+				try
+				{
+					a = BVPlusGraph.createAndLoad(new File("/home/panagiotis/ecirTests/roadNet-PA.llp.txt"), i, j, "test");
+					a.printBitsPerEdge();	
+				}catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+				
 			}
 			
 		}

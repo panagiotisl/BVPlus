@@ -1,4 +1,4 @@
-package gr.di.uoa.a8.sivac.utils;
+package gr.di.uoa.a8.bvplus.utils;
 
 import it.unimi.dsi.webgraph.ArcListASCIIGraph;
 import it.unimi.dsi.webgraph.BVGraph;

@@ -1,4 +1,4 @@
-package gr.di.uoa.a8.sivac.utils;
+package gr.di.uoa.a8.bvplus.utils;
 
 
 import java.io.BufferedReader;
@@ -42,16 +42,16 @@ public class CalculateFrequencies {
 		System.out.println("Size: " + size);
 		br.close();
 		br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-		int largest = SiVaCUtils.getSerialization(size - 1, size - 1, size, D);
+		int largest = BVPlusUtils.getSerialization(size - 1, size - 1, size, D);
 		byte[] array = new byte[largest / 8 + (largest % 8 != 0 ? 1 : 0)];
 		while ((line = br.readLine()) != null) {
 			String[] temp = line.split("\\s+");
 			int a = Integer.parseInt(temp[0]);
 			int b = Integer.parseInt(temp[1]);
-			if (SiVaCUtils.isDiagonal(a, b, D)) {
-				int no = SiVaCUtils.getSerialization(a, b, size, D);
+			if (BVPlusUtils.isDiagonal(a, b, D)) {
+				int no = BVPlusUtils.getSerialization(a, b, size, D);
 				try {
-					array[no / 8] = SiVaCUtils.set_bit(array[no / 8], no % 8);
+					array[no / 8] = BVPlusUtils.set_bit(array[no / 8], no % 8);
 				} catch (Exception e) {
 					System.err.println(no / 8 + " " + array.length);
 				}
@@ -64,8 +64,8 @@ public class CalculateFrequencies {
 			int count = 0;
 			for (int j = i - D; j < i + D + 1; j++) {
 				try {
-					int no = SiVaCUtils.getSerialization(i, j, size, D);
-					if (SiVaCUtils.isSet(array[no / 8], no % 8)) {
+					int no = BVPlusUtils.getSerialization(i, j, size, D);
+					if (BVPlusUtils.isSet(array[no / 8], no % 8)) {
 						number += "1";
 						count++;
 					} else {
@@ -115,14 +115,14 @@ public class CalculateFrequencies {
 		
 		
 		Object[] keys = sorted_map.keySet().toArray();
-		for (int bits = 2; bits <= D; bits++) {
+		for (int bits = 1; bits <= D; bits++) {
 			int pv = freqs.size();
 			int new_edges = 0, captured_edges = 0, total_edges = 0;
 			for (int i = ((int) Math.pow(2, bits) - 1); i < pv - 1; i++) {
 				int temp = -1, temp2 = 0;
 //				String key = "";
 				for (int j = 0; j < ((int) Math.pow(2, bits) - 1); j++) {
-					temp2 = SiVaCUtils.subset((String) keys[j], (String) keys[i]);
+					temp2 = BVPlusUtils.subset((String) keys[j], (String) keys[i]);
 					if (temp2 > temp) {
 						temp = temp2;
 //						key = (String) keys[j];
@@ -132,7 +132,7 @@ public class CalculateFrequencies {
 				// System.out.println((String)keys[i]+" " + key + " " +
 				// temp+" "+freqsX.get((String)keys[i])+" "+freqsX.get((String)keys[i])*SiVaCUtils.fracture((String)keys[i],
 				// temp));
-				captured_edges += freqsX.get((String) keys[i]) * SiVaCUtils.fracture((String) keys[i], temp);
+				captured_edges += freqsX.get((String) keys[i]) * BVPlusUtils.fracture((String) keys[i], temp);
 			}
 			new_edges = captured_edges;
 			for (int i = 0; i < ((int) Math.pow(2, bits) - 1); i++)

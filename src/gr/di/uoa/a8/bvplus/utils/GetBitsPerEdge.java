@@ -1,4 +1,4 @@
-package gr.di.uoa.a8.sivac.utils;
+package gr.di.uoa.a8.bvplus.utils;
 
 public class GetBitsPerEdge {
 
@@ -13,11 +13,11 @@ public class GetBitsPerEdge {
 		if (args.length < 1)
 			throw new IllegalArgumentException("Usage: String pathtograph [int diagonal size] [boolean social]");
 		if (args.length == 1)
-			SiVaCUtils.bitsPerEdge(args[0], 1, false);
+			BVPlusUtils.bitsPerEdge(args[0], 1, false);
 		else if (args.length == 2)
-			SiVaCUtils.bitsPerEdge(args[0], Integer.parseInt(args[1]), false);
+			BVPlusUtils.bitsPerEdge(args[0], Integer.parseInt(args[1]), false);
 		else if (args.length == 3)
-			SiVaCUtils.bitsPerEdge(args[0], Integer.parseInt(args[1]), Boolean.parseBoolean(args[2]));
+			BVPlusUtils.bitsPerEdge(args[0], Integer.parseInt(args[1]), Boolean.parseBoolean(args[2]));
 		else
 			throw new IllegalArgumentException("Usage: String pathtograph [int diagonal size] [boolean social]");
 	}
