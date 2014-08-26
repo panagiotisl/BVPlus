@@ -672,7 +672,7 @@ public class BVPlusGraph extends ImmutableGraph {
 			// for(int j=1;j<2*i;j++)
 			{
 				try {
-					a = BVPlusGraph.createAndLoad(new File("/home/panagiotis/graphs/dblp2010-directed/dblp2010-directed-sorted.txt"), 24, 7, "test");
+					a = BVPlusGraph.createAndLoad(new File(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), "test");
 					System.out.println(a.getBitsPerEdgeString());
 				} catch (Exception e) {
 					e.printStackTrace();
