@@ -76,8 +76,8 @@ public class Test {
 				}
 			}
 		}
-		if(args.length>1)
-			System.out.println(D+": In Diagonal: "+in+" Total: "+total+" Percentage: "+(float)100*in/total);
+//		if(args.length>1)
+//			System.out.println(D+": In Diagonal: "+in+" Total: "+total+" Percentage: "+(float)100*in/total);
 	}
 
 }

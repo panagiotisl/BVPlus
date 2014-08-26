@@ -132,7 +132,7 @@ public class CalculateFrequencies {
 				// System.out.println((String)keys[i]+" " + key + " " +
 				// temp+" "+freqsX.get((String)keys[i])+" "+freqsX.get((String)keys[i])*SiVaCUtils.fracture((String)keys[i],
 				// temp));
-				captured_edges += freqsX.get((String) keys[i]) * BVPlusUtils.fracture((String) keys[i], temp);
+				captured_edges += freqsX.get((String) keys[i]) * fracture((String) keys[i], temp);
 			}
 			new_edges = captured_edges;
 			for (int i = 0; i < ((int) Math.pow(2, bits) - 1); i++)
@@ -168,6 +168,18 @@ public class CalculateFrequencies {
 			} // returning 0 would merge keys
 		}
 	}
+	
+	public static double fracture(String string, int b) {
+		if(b<0)
+			return 0;
+		char[] array  = string.toCharArray();
+		double counter = 0;
+		for(int i = 0; i < array.length; i++)
+		        if (array[i] == '1')
+		        	counter++;
+		return b/counter;
+	}
+
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 

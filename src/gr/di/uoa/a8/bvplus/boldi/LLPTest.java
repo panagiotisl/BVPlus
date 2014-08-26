@@ -1,4 +1,4 @@
-package gr.di.uoa.a8.bvplus.utils;
+package gr.di.uoa.a8.bvplus.boldi;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,7 +19,7 @@ import it.unimi.dsi.webgraph.Transform;
 public class LLPTest {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		ImmutableGraph ig = ArcListASCIIGraph.loadOnce(new FileInputStream(new File("/var/www/html/graphs/road/roadNet-PA.txt")));
+		ImmutableGraph ig = ArcListASCIIGraph.loadOnce(new FileInputStream(new File("/home/panagiotis/Desktop/twitter.txt")));
 		ImmutableGraph.store(BVGraph.class, ig, "/tmp/example");
 		
 		ig = BVGraph.load("/tmp/example");
@@ -38,7 +38,7 @@ public class LLPTest {
 		
 		NodeIterator it = ig.nodeIterator();
 		
-		BufferedWriter bw = new BufferedWriter(new FileWriter(new File("/home/panagiotis/ecirTests/roadNet-PA.llp.txt")));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(new File("/home/panagiotis/Desktop/twitter-llp.txt")));
 		while(it.hasNext())
 		{
 			Integer node = it.next();
